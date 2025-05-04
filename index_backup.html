@@ -4,185 +4,17 @@
   <meta charset="UTF-8">
   <title>Escritorio Windows 95</title>
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      background: url('https://i.pinimg.com/736x/2d/ff/c6/2dffc606e621a4c158285bba9a041a6b.jpg') no-repeat center center fixed;
-      background-size: cover;
-      font-family: 'Pixelify Sans', sans-serif;
-      color: black;
-      height: 100vh;
-      overflow: hidden;
-      font-size: 20px;
-    }
-
-    #desktop {
-      position: relative;
-      width: 100%;
-      height: calc(100vh - 60px);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 20px;
-      box-sizing: border-box;
-      gap: 30px;
-    }
-
-    .desktop-icon {
-      width: 100px;
-      text-align: center;
-      cursor: pointer;
-      color: rgb(0, 0, 0);
-      font-size: 25px;
-    }
-
-    .desktop-icon img {
-      width: 64px;
-      height: 64px;
-    }
-
-    .start-bar {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 60px;
-      background-color: #C0C0C0;
-      display: flex;
-      align-items: center;
-      padding: 0 10px;
-      box-sizing: border-box;
-      border-top: 2px solid #fff;
-      border-bottom: 2px solid #404040;
-    }
-
-    .start-button {
-      width: 160px;
-      height: 50px;
-      background-color: #C0C0C0;
-      border: 2px outset #fff;
-      font-family: 'Pixelify Sans', sans-serif;
-      font-size: 29px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 10px;
-      padding: 5px 10px;
-    }
-
-    .start-button .start-icon {
-      width: 20px;
-      height: 20px;
-    }
-
-    .start-menu {
-      position: absolute;
-      bottom: 60px;
-      left: 10px;
-      width: 260px;
-      background-color: #fff;
-      border: 2px solid #000;
-      display: none;
-      flex-direction: column;
-      padding: 10px;
-      z-index: 1000;
-    }
-
-    .start-menu .desktop-icon {
-      color: black;
-      margin: 15px 0;
-      font-size: 18px;
-    }
-
-    .window {
-      position: absolute;
-      background-color: white;
-      border: 2px solid black;
-      box-shadow: 4px 4px 0 #000;
-      z-index: 10;
-      font-size: 20px;
-      overflow: hidden;
-    }
-
-    .title-bar {
-      background: linear-gradient(90deg, rgba(27, 0, 204, 1) 0%, rgba(141, 87, 199, 1) 63%, rgba(188, 83, 237, 1) 100%);
-      color: white;
-      padding: 4px 8px;
-      font-family: 'Pixelify Sans', sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: move;
-      height: 30px;
-      box-sizing: border-box;
-    }
-
-    .close-button {
-      background-color: red;
-      color: white;
-      border: none;
-      width: 26px;
-      height: 26px;
-      font-weight: bold;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    .notepad-body {
-      padding: 14px;
-      overflow: auto;
-      height: calc(100% - 40px);
-      box-sizing: border-box;
-    }
-
-    .thumbnail-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .thumbnail {
-      width: 80px;
-      text-align: center;
-      cursor: pointer;
-      font-size: 16px;
-      color: black;
-    }
-
-    .thumbnail img {
-      width: 64px;
-      height: 64px;
-      display: block;
-      margin: 0 auto 5px;
-    }
-
-    .image-container {
-      width: 100%;
-      height: calc(100% - 30px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .image-container img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Contenido HTML permanece igual -->
   <div id="desktop">
     <div class="desktop-icon" onclick="openAboutWindow()" title="About">
       <img src="https://i.ibb.co/CpVD8DXP/text-file-2.png" alt="About">
       <div>About</div>
     </div>
-    <div class="desktop-icon" onclick="openBlogWindow()" title="Blog">
-      <img src="https://i.ibb.co/604BmYcZ/mail.png" alt="Blog">
-      <div>Blog</div>
+    <div class="desktop-icon" onclick="openDiaryWindow()" title="Diary">
+      <img src="https://i.ibb.co/604BmYcZ/mail.png" alt="Diary">
+      <div>Diary</div>
     </div>
     <div class="desktop-icon" onclick="openGalleryWindow()" title="Gallery">
       <img src="https://i.ibb.co/60NK1HD9/camera.png" alt="Gallery">
@@ -206,9 +38,9 @@
       <img src="https://i.ibb.co/CpVD8DXP/text-file-2.png" alt="About">
       <div>About</div>
     </div>
-    <div class="desktop-icon" onclick="openBlogWindow()" title="Blog">
-      <img src="https://i.ibb.co/604BmYcZ/mail.png" alt="Blog">
-      <div>Blog</div>
+    <div class="desktop-icon" onclick="openDiaryWindow()" title="Diary">
+      <img src="https://i.ibb.co/604BmYcZ/mail.png" alt="Diary">
+      <div>Diary</div>
     </div>
     <div class="desktop-icon" onclick="openGalleryWindow()" title="Gallery">
       <img src="https://i.ibb.co/60NK1HD9/camera.png" alt="Gallery">
@@ -220,7 +52,8 @@
     </div>
   </div>
 
-  <div id="aboutWindow" class="window" style="top: 100px; left: 150px; display: none; width: 480px; height: 320px;">
+  <!-- Cambia display: none por display: block en la siguiente línea -->
+  <div id="aboutWindow" class="window" style="top: 100px; left: 150px; display: block; width: 480px; height: 320px;">
     <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
       <span>✰ About ✰</span>
       <button class="close-button" onclick="closeWindow('aboutWindow')">×</button>
@@ -230,15 +63,15 @@
     </div>
   </div>
 
-  <div id="blogWindow" class="window" style="top: 150px; left: 200px; display: none; width: 480px; height: 320px;">
+  <div id="diaryWindow" class="window" style="display: none; width: 800px; height: 650px;">
     <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
-      <span>✰ Blog ✰</span>
-      <button class="close-button" onclick="closeWindow('blogWindow')">×</button>
+      <span>✰ Diary ✰</span>
+      <button class="close-button" onclick="closeWindow('diaryWindow')">×</button>
     </div>
-    <div class="notepad-body">
-      Bienvenido a mi blog.
+    <div class="notepad-body" style="height: calc(100% - 30px); overflow: auto; padding: 0;">
+      <div id="contenedor-blog" style="height: 100%; padding: 20px;"></div>
     </div>
-  </div>
+</div>
 
   <div id="galleryWindow" class="window" style="top: 200px; left: 250px; display: none; width: 480px; height: 320px;">
     <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
@@ -247,7 +80,10 @@
     </div>
     <div class="notepad-body">
       <div class="thumbnail-grid">
-        
+        <div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/wF4LPWjd/20250503-175720.jpg', 'Pipa Long')">
+          <img src="https://i.ibb.co/wF4LPWjd/20250503-175720.jpg" alt="Pipa Long">
+          <div>Pipa Long</div>
+        </div>
         <div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/yBfs5vG6/pipa.jpg', 'Pipa :)')">
           <img src="https://i.ibb.co/yBfs5vG6/pipa.jpg" alt="Pipa :)">
           <div>Pipa :)</div>
@@ -263,7 +99,55 @@
     </div>
     <div class="notepad-body">
       <div class="thumbnail-grid">
-        <div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/1ftP96w6/asd.png', 'Axolotl Persona')">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/tgyTcYh/fish.jpg', 'Fisher')">
+          <img src="https://i.ibb.co/tgyTcYh/fish.jpg" alt="Fisher">
+          <div>Fisher</div>
+        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/QvH7C2Qs/cat.jpg', 'Dancing Cat')">
+          <img src="https://i.ibb.co/QvH7C2Qs/cat.jpg" alt="Dancing Cat">
+          <div>Dancing Cat</div>
+        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/Dfs4DQSL/girl.jpg', 'Girl')">
+          <img src="https://i.ibb.co/Dfs4DQSL/girl.jpg" alt="Girl">
+          <div>Girl</div>
+        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/QFWGLhgw/creepy.jpg', 'Creepy')">
+          <img src="https://i.ibb.co/QFWGLhgw/creepy.jpg" alt="Creepy">
+          <div>Creepy</div>
+        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/BVLq0Ftm/oc.jpg', 'OC(unnamed)2')">
+          <img src="https://i.ibb.co/BVLq0Ftm/oc.jpg" alt="OC(unnamed)2">
+          <div>OC(unnamed)2</div>
+        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/NgXW7VfG/ninja.jpg', 'Ninja')">
+          <img src="https://i.ibb.co/NgXW7VfG/ninja.jpg" alt="Ninja">
+          <div>Ninja</div>
+        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/r2rzf06R/oc2.jpg', 'OC(unnamed)')">
+          <img src="https://i.ibb.co/r2rzf06R/oc2.jpg" alt="OC(unnamed)">
+          <div>OC(unnamed)</div>
+        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/gLzLww1N/slime.jpg', 'SlimeHead')">
+          <img src="https://i.ibb.co/gLzLww1N/slime.jpg" alt="SlimeHead">
+          <div>SlimeHead</div>
+        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/Jw4VCj0K/spina.jpg', 'Spiky')">
+          <img src="https://i.ibb.co/Jw4VCj0K/spina.jpg" alt="Spiky">
+          <div>Spiky</div>
+        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/B2C7D0Nb/whale.jpg', 'Whale')">
+          <img src="https://i.ibb.co/B2C7D0Nb/whale.jpg" alt="Whale">
+          <div>Whale</div>
+        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/N64VPX27/tentacle.jpg', 'Tentacle')">
+          <img src="https://i.ibb.co/N64VPX27/tentacle.jpg" alt="Tentacle">
+          <div>Tentacle</div>
+        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/5gj3fNPw/two.jpg', 'Team')">
+          <img src="https://i.ibb.co/5gj3fNPw/two.jpg" alt="Team">
+          <div>Team</div>
+        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/1ftP96w6/asd.png', 'Axolotl Persona')">
           <img src="https://i.ibb.co/1ftP96w6/asd.png" alt="Axolotl Persona">
           <div>Axolotl Persona</div>
         </div>
@@ -279,146 +163,6 @@
     </div>
   </div>
 
-  <script>
-    const startMenu = document.getElementById('startMenu');
-    let windowCounter = 0;
-    let lastWindowPosition = { x: 100, y: 100 }; // Posición inicial para el efecto cascada
-
-    function toggleStartMenu() {
-      startMenu.style.display = (startMenu.style.display === 'flex') ? 'none' : 'flex';
-    }
-
-    function openAboutWindow() {
-      const window = document.getElementById('aboutWindow');
-      window.style.display = 'block';
-      window.style.left = `${lastWindowPosition.x}px`;
-      window.style.top = `${lastWindowPosition.y}px`;
-      updateLastWindowPosition(30, 30);
-      startMenu.style.display = 'none';
-    }
-
-    function openBlogWindow() {
-      const window = document.getElementById('blogWindow');
-      window.style.display = 'block';
-      window.style.left = `${lastWindowPosition.x}px`;
-      window.style.top = `${lastWindowPosition.y}px`;
-      updateLastWindowPosition(30, 30);
-      startMenu.style.display = 'none';
-    }
-
-    function openGalleryWindow() {
-      const window = document.getElementById('galleryWindow');
-      window.style.display = 'block';
-      window.style.left = `${lastWindowPosition.x}px`;
-      window.style.top = `${lastWindowPosition.y}px`;
-      updateLastWindowPosition(30, 30);
-      startMenu.style.display = 'none';
-    }
-
-    function openArtWindow() {
-      const window = document.getElementById('artWindow');
-      window.style.display = 'block';
-      window.style.left = `${lastWindowPosition.x}px`;
-      window.style.top = `${lastWindowPosition.y}px`;
-      updateLastWindowPosition(30, 30);
-      startMenu.style.display = 'none';
-    }
-
-    function closeWindow(id) {
-      document.getElementById(id).style.display = 'none';
-    }
-
-    function updateLastWindowPosition(offsetX, offsetY) {
-      lastWindowPosition.x += offsetX;
-      lastWindowPosition.y += offsetY;
-      
-      // Si la posición se sale de la pantalla, reiniciar a la posición inicial
-      if (lastWindowPosition.y > window.innerHeight * 0.7 || 
-          lastWindowPosition.x > window.innerWidth * 0.7) {
-        lastWindowPosition = { x: 100, y: 100 };
-      }
-    }
-
-    function openImageWindow(src, title) {
-      windowCounter++;
-      const windowId = `imageWindow-${windowCounter}`;
-      
-      // Crear nueva ventana
-      const newWindow = document.createElement('div');
-      newWindow.id = windowId;
-      newWindow.className = 'window';
-      newWindow.style.display = 'block';
-      
-      // Posición en cascada
-      newWindow.style.left = `${lastWindowPosition.x}px`;
-      newWindow.style.top = `${lastWindowPosition.y}px`;
-      updateLastWindowPosition(30, 30);
-      
-      // Crear imagen para calcular dimensiones
-      const img = new Image();
-      img.src = src;
-      
-      img.onload = function() {
-        const maxHeight = (window.innerHeight * 0.8) - 30; // 30px para la barra de título
-        const imgRatio = img.width / img.height;
-        
-        // Calcular dimensiones manteniendo el ratio
-        let imgHeight = Math.min(img.height, maxHeight);
-        let imgWidth = imgHeight * imgRatio;
-        
-        // Si el ancho excede el 80% del viewport, ajustamos
-        const maxWidth = window.innerWidth * 0.8;
-        if (imgWidth > maxWidth) {
-          imgWidth = maxWidth;
-          imgHeight = imgWidth / imgRatio;
-        }
-        
-        // Calcular dimensiones totales de la ventana
-        const windowWidth = imgWidth;
-        const windowHeight = imgHeight + 30; // 30px para la barra de título
-        
-        newWindow.style.width = `${windowWidth}px`;
-        newWindow.style.height = `${windowHeight}px`;
-        
-        // Contenido de la ventana
-        newWindow.innerHTML = `
-          <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
-            <span>✰ ${title} ✰</span>
-            <button class="close-button" onclick="closeWindow('${windowId}')">×</button>
-          </div>
-          <div class="image-container">
-            <img src="${src}" alt="${title}">
-          </div>
-        `;
-        
-        document.body.appendChild(newWindow);
-      };
-    }
-
-    // Dragging
-    let offsetX, offsetY, isDragging = false, currentWindow;
-
-    function startDrag(e, element) {
-      isDragging = true;
-      currentWindow = element;
-      offsetX = e.clientX - element.offsetLeft;
-      offsetY = e.clientY - element.offsetTop;
-      document.addEventListener('mousemove', drag);
-      document.addEventListener('mouseup', stopDrag);
-    }
-
-    function drag(e) {
-      if (isDragging && currentWindow) {
-        currentWindow.style.left = (e.clientX - offsetX) + 'px';
-        currentWindow.style.top = (e.clientY - offsetY) + 'px';
-      }
-    }
-
-    function stopDrag() {
-      isDragging = false;
-      document.removeEventListener('mousemove', drag);
-      document.removeEventListener('mouseup', stopDrag);
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

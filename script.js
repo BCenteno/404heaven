@@ -1,139 +1,278 @@
+// Elementos y estado global
 const startMenu = document.getElementById('startMenu');
+const windows = {
+    about: document.getElementById('aboutWindow'),
+    diary: document.getElementById('diaryWindow'),
+    gallery: document.getElementById('galleryWindow'),
+    art: document.getElementById('artWindow')
+};
 let windowCounter = 0;
-let lastWindowPosition = { x: 100, y: 100 }; // Posición inicial para el efecto cascada
-
-function toggleStartMenu() {
-  startMenu.style.display = (startMenu.style.display === 'flex') ? 'none' : 'flex';
-}
-
-function openAboutWindow() {
-  const window = document.getElementById('aboutWindow');
-  window.style.display = 'block';
-  window.style.left = `${lastWindowPosition.x}px`;
-  window.style.top = `${lastWindowPosition.y}px`;
-  updateLastWindowPosition(30, 30);
-  startMenu.style.display = 'none';
-}
-
-function openDiaryWindow() {
-  const window = document.getElementById('diaryWindow');
-  window.style.display = 'block';
-  window.style.left = `${lastWindowPosition.x}px`;
-  window.style.top = `${lastWindowPosition.y}px`;
-  updateLastWindowPosition(30, 30);
-  startMenu.style.display = 'none';
-}
-
-function openGalleryWindow() {
-  const window = document.getElementById('galleryWindow');
-  window.style.display = 'block';
-  window.style.left = `${lastWindowPosition.x}px`;
-  window.style.top = `${lastWindowPosition.y}px`;
-  updateLastWindowPosition(30, 30);
-  startMenu.style.display = 'none';
-}
-
-function openArtWindow() {
-  const window = document.getElementById('artWindow');
-  window.style.display = 'block';
-  window.style.left = `${lastWindowPosition.x}px`;
-  window.style.top = `${lastWindowPosition.y}px`;
-  updateLastWindowPosition(30, 30);
-  startMenu.style.display = 'none';
-}
-
-function closeWindow(id) {
-  document.getElementById(id).style.display = 'none';
-}
-
-function updateLastWindowPosition(offsetX, offsetY) {
-  lastWindowPosition.x += offsetX;
-  lastWindowPosition.y += offsetY;
-  
-  // Si la posición se sale de la pantalla, reiniciar a la posición inicial
-  if (lastWindowPosition.y > window.innerHeight * 0.7 || 
-      lastWindowPosition.x > window.innerWidth * 0.7) {
-    lastWindowPosition = { x: 100, y: 100 };
-  }
-}
-
-function openImageWindow(src, title) {
-  windowCounter++;
-  const windowId = `imageWindow-${windowCounter}`;
-  
-  // Crear nueva ventana
-  const newWindow = document.createElement('div');
-  newWindow.id = windowId;
-  newWindow.className = 'window';
-  newWindow.style.display = 'block';
-  
-  // Posición en cascada
-  newWindow.style.left = `${lastWindowPosition.x}px`;
-  newWindow.style.top = `${lastWindowPosition.y}px`;
-  updateLastWindowPosition(30, 30);
-  
-  // Crear imagen para calcular dimensiones
-  const img = new Image();
-  img.src = src;
-  
-  img.onload = function() {
-    const maxHeight = (window.innerHeight * 0.8) - 30; // 30px para la barra de título
-    const imgRatio = img.width / img.height;
-    
-    // Calcular dimensiones manteniendo el ratio
-    let imgHeight = Math.min(img.height, maxHeight);
-    let imgWidth = imgHeight * imgRatio;
-    
-    // Si el ancho excede el 80% del viewport, ajustamos
-    const maxWidth = window.innerWidth * 0.8;
-    if (imgWidth > maxWidth) {
-      imgWidth = maxWidth;
-      imgHeight = imgWidth / imgRatio;
-    }
-    
-    // Calcular dimensiones totales de la ventana
-    const windowWidth = imgWidth;
-    const windowHeight = imgHeight + 30; // 30px para la barra de título
-    
-    newWindow.style.width = `${windowWidth}px`;
-    newWindow.style.height = `${windowHeight}px`;
-    
-    // Contenido de la ventana
-    newWindow.innerHTML = `
-      <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
-        <span>✰ ${title} ✰</span>
-        <button class="close-button" onclick="closeWindow('${windowId}')">×</button>
-      </div>
-      <div class="image-container">
-        <img src="${src}" alt="${title}">
-      </div>
-    `;
-    
-    document.body.appendChild(newWindow);
-  };
-}
-
-// Dragging
+let lastWindowPosition = { x: 100, y: 100 };
 let offsetX, offsetY, isDragging = false, currentWindow;
 
-function startDrag(e, element) {
-  isDragging = true;
-  currentWindow = element;
-  offsetX = e.clientX - element.offsetLeft;
-  offsetY = e.clientY - element.offsetTop;
-  document.addEventListener('mousemove', drag);
-  document.addEventListener('mouseup', stopDrag);
-}
+// Funciones de utilidad
+const toggleDisplay = (element, displayType = 'flex') => {
+    element.style.display = (element.style.display === displayType) ? 'none' : displayType;
+};
 
-function drag(e) {
-  if (isDragging && currentWindow) {
-    currentWindow.style.left = (e.clientX - offsetX) + 'px';
-    currentWindow.style.top = (e.clientY - offsetY) + 'px';
-  }
-}
+const toggleStartMenu = () => toggleDisplay(startMenu);
 
-function stopDrag() {
-  isDragging = false;
-  document.removeEventListener('mousemove', drag);
-  document.removeEventListener('mouseup', stopDrag);
-}
+const updateLastWindowPosition = (offsetX = 30, offsetY = 30) => {
+    lastWindowPosition.x += offsetX;
+    lastWindowPosition.y += offsetY;
+    
+    if (lastWindowPosition.y > window.innerHeight * 0.7 || 
+        lastWindowPosition.x > window.innerWidth * 0.7) {
+        lastWindowPosition = { x: 100, y: 100 };
+    }
+};
+
+const centerWindow = (windowElement) => {
+    const windowWidth = parseInt(windowElement.style.width) || 480;
+    const windowHeight = parseInt(windowElement.style.height) || 320;
+    
+    windowElement.style.left = `${(window.innerWidth - windowWidth) / 2}px`;
+    windowElement.style.top = `${(window.innerHeight - windowHeight) / 2}px`;
+    
+    lastWindowPosition = { 
+        x: (window.innerWidth - windowWidth) / 2 + 30, 
+        y: (window.innerHeight - windowHeight) / 2 + 30 
+    };
+};
+
+// Gestión de ventanas
+const positionWindow = (windowElement) => {
+    const anyWindowVisible = Array.from(document.querySelectorAll('.window')).some(
+        win => win.style.display === 'block' && win !== windowElement
+    );
+    
+    if (anyWindowVisible) {
+        windowElement.style.left = `${lastWindowPosition.x}px`;
+        windowElement.style.top = `${lastWindowPosition.y}px`;
+        updateLastWindowPosition();
+    } else {
+        centerWindow(windowElement);
+    }
+};
+
+const openWindow = (windowId, options = {}) => {
+    const window = windows[windowId] || document.getElementById(windowId);
+    if (!window) return;
+    
+    if (options.forceSize) {
+        window.style.width = options.forceSize.width;
+        window.style.height = options.forceSize.height;
+    }
+    
+    positionWindow(window);
+    window.style.display = 'block';
+    startMenu.style.display = 'none';
+    
+    if (windowId === 'diary') cargarBlog();
+};
+
+const closeWindow = (id) => {
+    const window = typeof id === 'string' ? document.getElementById(id) : id;
+    if (window) window.style.display = 'none';
+};
+
+// Funciones específicas de ventanas
+const openImageWindow = (src, title) => {
+    windowCounter++;
+    const windowId = `imageWindow-${windowCounter}`;
+    
+    const newWindow = document.createElement('div');
+    newWindow.id = windowId;
+    newWindow.className = 'window';
+    newWindow.style.display = 'block';
+    
+    const img = new Image();
+    img.src = src;
+    
+    img.onload = function() {
+        const maxHeight = (window.innerHeight * 0.8) - 30;
+        const maxWidth = (window.innerWidth * 0.8);
+        const imgRatio = img.width / img.height;
+        
+        // Calcular dimensiones manteniendo relación de aspecto
+        let imgWidth = img.width;
+        let imgHeight = img.height;
+        
+        if (imgWidth > maxWidth) {
+            imgWidth = maxWidth;
+            imgHeight = imgWidth / imgRatio;
+        }
+        
+        if (imgHeight > maxHeight) {
+            imgHeight = maxHeight;
+            imgWidth = imgHeight * imgRatio;
+        }
+        
+        // Asegurarse de que la ventana no sea demasiado pequeña
+        const minSize = 300;
+        if (imgWidth < minSize) imgWidth = minSize;
+        if (imgHeight < minSize) imgHeight = minSize;
+        
+        newWindow.style.width = `${imgWidth}px`;
+        newWindow.style.height = `${imgHeight + 30}px`;
+        
+        // Posicionar la ventana para que sea completamente visible
+        const left = Math.max(10, (window.innerWidth - imgWidth) / 2);
+        const top = Math.max(10, (window.innerHeight - imgHeight - 30) / 2);
+        
+        newWindow.style.left = `${left}px`;
+        newWindow.style.top = `${top}px`;
+        
+        newWindow.innerHTML = `
+            <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
+                <span>✰ ${title} ✰</span>
+                <button class="close-button" onclick="this.parentElement.parentElement.style.display = 'none'">×</button>
+            </div>
+            <div class="image-container">
+                <img src="${src}" alt="${title}">
+            </div>
+        `;
+        
+        document.body.appendChild(newWindow);
+    };
+};
+
+// Funciones de arrastre
+const startDrag = (e, element) => {
+    isDragging = true;
+    currentWindow = element;
+    offsetX = e.clientX - element.offsetLeft;
+    offsetY = e.clientY - element.offsetTop;
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', stopDrag);
+};
+
+const drag = (e) => {
+    if (isDragging && currentWindow) {
+        currentWindow.style.left = (e.clientX - offsetX) + 'px';
+        currentWindow.style.top = (e.clientY - offsetY) + 'px';
+    }
+};
+
+const stopDrag = () => {
+    isDragging = false;
+    document.removeEventListener('mousemove', drag);
+    document.removeEventListener('mouseup', stopDrag);
+};
+
+// Función para procesar el contenido y mantener las imágenes seguras
+const processContent = (content) => {
+    // Convertir imágenes HTTP a HTTPS para mayor seguridad
+    let processed = content.replace(/<img([^>]+)src="http:\/\//g, '<img$1src="https://');
+    
+    // Asegurar que las imágenes no excedan el ancho del contenedor
+    processed = processed.replace(/<img/g, '<img style="max-width:100%; height:auto;"');
+    
+    return processed;
+};
+
+// Funciones del blog actualizadas
+const cargarBlog = async () => {
+    const contenedor = document.getElementById('contenedor-blog');
+    const url = 'https://public-api.wordpress.com/rest/v1.1/sites/404angelzblog.wordpress.com/posts?number=5';
+    
+    contenedor.innerHTML = '<div style="padding:20px;text-align:center;"><img src="https://i.ibb.co/8XJf3Zj/hourglass.gif" width="32"><p>Cargando...</p></div>';
+  
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const entradas = data.posts;
+    
+        contenedor.innerHTML = entradas.map(entrada => {
+            // Extraer la primera imagen del contenido para el thumbnail
+            const imgMatch = entrada.content.match(/<img[^>]+src="([^"]+)"[^>]*>/);
+            const thumbnail = imgMatch ? 
+                `<div class="blog-thumbnail">
+                    <img src="${imgMatch[1]}" alt="Miniatura" style="max-width:100%; max-height:150px; margin-bottom:10px;">
+                </div>` : '';
+            
+            return `
+                <div class="entrada-blog">
+                    ${thumbnail}
+                    <h3>${entrada.title}</h3>
+                    <p>${entrada.excerpt.replace(/<[^>]+>/g, '')}</p>
+                    <button onclick="abrirPostCompleto('${entrada.ID}')" class="win95-button">📖 Leer completo</button>
+                    <div class="fecha">${new Date(entrada.date).toLocaleDateString()}</div>
+                </div>
+            `;
+        }).join('') || '<p>No se encontraron entradas.</p>';
+    } catch (error) {
+        contenedor.innerHTML = `
+            <div style="color:red;padding:20px;">
+                Error al cargar el blog:<br>${error.message}
+            </div>
+        `;
+    }
+};
+
+const abrirPostCompleto = async (postId) => {
+    try {
+        const response = await fetch(`https://public-api.wordpress.com/rest/v1.1/sites/404angelzblog.wordpress.com/posts/${postId}`);
+        const post = await response.json();
+        
+        const newWindow = document.createElement('div');
+        newWindow.className = 'window';
+        newWindow.style.width = '700px';
+        newWindow.style.height = '500px';
+        newWindow.style.display = 'block';
+        
+        positionWindow(newWindow);
+        
+        newWindow.innerHTML = `
+            <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
+                <span>✰ ${post.title} ✰</span>
+                <button class="close-button" onclick="this.parentElement.parentElement.remove()">×</button>
+            </div>
+            <div class="notepad-body" style="height: calc(100% - 30px); overflow: hidden; padding: 0;">
+                <div class="post-content" style="
+                    height: 100%;
+                    overflow-y: auto;
+                    padding: 15px;
+                    font-family: 'Pixelify Sans', sans-serif;
+                    line-height: 1.5;
+                    box-sizing: border-box;
+                ">
+                    ${processContent(post.content)}
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(newWindow);
+        
+        newWindow.querySelectorAll('.post-content img').forEach(img => {
+            img.style.cursor = 'zoom-in';
+            img.onclick = (e) => {
+                e.stopPropagation();
+                openImageWindow(img.src, post.title);
+            };
+        });
+    } catch (error) {
+        alert(`Error al cargar el post: ${error.message}`);
+    }
+};
+// Abrir ventana About al cargar la página
+window.addEventListener('DOMContentLoaded', () => openWindow('about'));
+
+// Event listeners
+document.addEventListener('click', (e) => {
+    if (!startMenu.contains(e.target) && !e.target.closest('.start-button')) {
+        startMenu.style.display = 'none';
+    }
+});
+
+// Asignación de funciones globales
+window.toggleStartMenu = toggleStartMenu;
+window.openAboutWindow = () => openWindow('about');
+window.openDiaryWindow = () => openWindow('diary', { forceSize: { width: '800px', height: '650px' } });
+window.openGalleryWindow = () => openWindow('gallery');
+window.openArtWindow = () => openWindow('art');
+window.closeWindow = closeWindow;
+window.startDrag = startDrag;
+window.cargarBlog = cargarBlog;
+window.abrirPostCompleto = abrirPostCompleto;
+window.openImageWindow = openImageWindow;

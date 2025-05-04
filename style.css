@@ -1,14 +1,39 @@
+/* ===== VARIABLES Y ESTILOS BASE ===== */
+:root {
+  --win-bg: #C0C0C0;
+  --win-text: black;
+  --win-accent: #1b00cc;
+  --win-border: 2px solid black;
+  --win-shadow: 4px 4px 0 #000;
+  --win-font: 'Pixelify Sans', sans-serif;
+}
+
 body {
   margin: 0;
   background: url('https://i.pinimg.com/736x/2d/ff/c6/2dffc606e621a4c158285bba9a041a6b.jpg') no-repeat center center fixed;
   background-size: cover;
-  font-family: 'Pixelify Sans', sans-serif;
-  color: black;
+  font-family: var(--win-font);
+  color: var(--win-text);
   height: 100vh;
   overflow: hidden;
   font-size: 20px;
 }
 
+/* ===== ELEMENTOS COMUNES ===== */
+.window, .start-menu, .start-bar {
+  background-color: white;
+  border: var(--win-border);
+  box-shadow: var(--win-shadow);
+  font-family: var(--win-font);
+}
+
+.button, .start-button, .win95-button, .close-button {
+  font-family: var(--win-font);
+  cursor: pointer;
+  border-style: outset;
+}
+
+/* ===== ESCRITORIO ===== */
 #desktop {
   position: relative;
   width: 100%;
@@ -25,7 +50,7 @@ body {
   width: 100px;
   text-align: center;
   cursor: pointer;
-  color: rgb(0, 0, 0);
+  color: var(--win-text);
   font-size: 25px;
 }
 
@@ -34,13 +59,14 @@ body {
   height: 64px;
 }
 
+/* ===== BARRA DE INICIO ===== */
 .start-bar {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 60px;
-  background-color: #C0C0C0;
+  height: 50px;
+  background-color: var(--win-bg);
   display: flex;
   align-items: center;
   padding: 0 10px;
@@ -51,12 +77,10 @@ body {
 
 .start-button {
   width: 160px;
-  height: 50px;
-  background-color: #C0C0C0;
+  height: 40px;
+  background-color: var(--win-bg);
   border: 2px outset #fff;
-  font-family: 'Pixelify Sans', sans-serif;
   font-size: 29px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -74,8 +98,6 @@ body {
   bottom: 60px;
   left: 10px;
   width: 260px;
-  background-color: #fff;
-  border: 2px solid #000;
   display: none;
   flex-direction: column;
   padding: 10px;
@@ -83,26 +105,30 @@ body {
 }
 
 .start-menu .desktop-icon {
-  color: black;
+  color: var(--win-text);
   margin: 15px 0;
   font-size: 18px;
 }
 
+/* ===== VENTANAS ===== */
 .window {
   position: absolute;
-  background-color: white;
-  border: 2px solid black;
-  box-shadow: 4px 4px 0 #000;
+  overflow: hidden;
   z-index: 10;
   font-size: 20px;
-  overflow: hidden;
+  min-width: 550px;
+  min-height: 400px;
+}
+
+#diaryWindow {
+  width: 800px !important;
+  height: 650px !important;
 }
 
 .title-bar {
   background: linear-gradient(90deg, rgba(27, 0, 204, 1) 0%, rgba(141, 87, 199, 1) 63%, rgba(188, 83, 237, 1) 100%);
   color: white;
   padding: 4px 8px;
-  font-family: 'Pixelify Sans', sans-serif;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -119,7 +145,6 @@ body {
   height: 26px;
   font-weight: bold;
   font-size: 20px;
-  cursor: pointer;
 }
 
 .notepad-body {
@@ -127,33 +152,29 @@ body {
   overflow: auto;
   height: calc(100% - 40px);
   box-sizing: border-box;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+#diaryWindow .notepad-body {
+  padding: 0;
+  overflow: hidden;
+  height: calc(100% - 30px);
+}
+
+/* ===== CONTENEDORES ===== */
+.thumbnail-grid, .image-container {
+  display: flex;
 }
 
 .thumbnail-grid {
-  display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-}
-
-.thumbnail {
-  width: 80px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 16px;
-  color: black;
-}
-
-.thumbnail img {
-  width: 64px;
-  height: 64px;
-  display: block;
-  margin: 0 auto 5px;
+  gap: 40px;
 }
 
 .image-container {
   width: 100%;
   height: calc(100% - 30px);
-  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -163,4 +184,124 @@ body {
   max-height: 100%;
   object-fit: contain;
   display: block;
+}
+
+.thumbnail {
+  width: 80px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--win-text);
+}
+
+.thumbnail img {
+  text-align: center;
+  width: 100px;
+  height: 100px;
+  display: block;
+  margin: 0 auto 5px;
+}
+
+/* ===== BLOG ===== */
+#contenedor-blog {
+  height: 100%;
+  overflow-y: auto;
+  padding: 20px;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.entrada-blog {
+  background: white;
+  margin-bottom: 20px;
+  padding: 15px;
+  border: var(--win-border);
+  box-shadow: 3px 3px 0 #000;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.entrada-blog h3 {
+  color: var(--win-accent);
+  margin: 0 0 10px 0;
+  font-size: 22px;
+  border-bottom: 1px dashed #aaa;
+  padding-bottom: 5px;
+}
+
+.entrada-blog p {
+  margin: 0 0 10px 0;
+}
+
+.entrada-blog a {
+  color: var(--win-accent);
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.entrada-blog a:hover {
+  text-decoration: underline;
+}
+
+.fecha {
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+}
+
+/* ===== BOTONES ===== */
+.win95-button {
+  background: var(--win-bg);
+  border: 2px outset #fff;
+  padding: 5px 10px;
+  margin-top: 10px;
+}
+
+.win95-button:active {
+  border-style: inset;
+}
+
+/* ===== SCROLLBAR ESTILO WINDOWS 95 ===== */
+/* Scrollbar principal (Diary) */
+#contenedor-blog::-webkit-scrollbar,
+/* Scrollbar de posts individuales */
+.post-content::-webkit-scrollbar {
+  width: 16px;
+  background-color: var(--win-bg);
+}
+
+#contenedor-blog::-webkit-scrollbar-track,
+.post-content::-webkit-scrollbar-track {
+  background: var(--win-bg);
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-top: 2px solid #fff;
+  border-bottom: 2px solid #404040;
+}
+
+#contenedor-blog::-webkit-scrollbar-thumb,
+.post-content::-webkit-scrollbar-thumb {
+  background: var(--win-bg);
+  border: 2px outset #fff;
+  box-shadow: inset 1px 1px 0 #404040, 
+              inset -1px -1px 0 #404040;
+}
+
+/* Efecto al hacer hover */
+#contenedor-blog::-webkit-scrollbar-thumb:hover,
+.post-content::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* ===== CONTENIDO DE POST ===== */
+.post-content {
+  font-size: 18px;
+}
+
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 10px 0;
+  border: 1px solid #000;
 }
