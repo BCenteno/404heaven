@@ -4,7 +4,9 @@ const windows = {
     about: document.getElementById('aboutWindow'),
     diary: document.getElementById('diaryWindow'),
     gallery: document.getElementById('galleryWindow'),
-    art: document.getElementById('artWindow')
+    art: document.getElementById('artWindow'),
+    music: document.getElementById('musicWindow')
+
 };
 let windowCounter = 0;
 let lastWindowPosition = { x: 100, y: 100 };
@@ -41,7 +43,9 @@ const centerWindow = (windowElement) => {
 };
 
 // Gestión de ventanas
-const positionWindow = (windowElement) => {
+const positionWindow = (windowElement, initialPosition = false) => {
+    if (initialPosition) return; // No reposiciona si es la carga inicial
+    
     const anyWindowVisible = Array.from(document.querySelectorAll('.window')).some(
         win => win.style.display === 'block' && win !== windowElement
     );
@@ -54,6 +58,37 @@ const positionWindow = (windowElement) => {
         centerWindow(windowElement);
     }
 };
+// const openMusicPlayer = (forcePosition = false) => {
+//     const windowId = 'musicWindow';
+//     let window = document.getElementById(windowId);
+    
+//     if (!window) {
+//         window = document.createElement('div');
+//         window.id = windowId;
+//         window.className = 'window';
+//         window.style.width = '500px';
+//         window.style.height = '350px';
+//         window.innerHTML = `
+//             <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
+//                 <span>✰ Music Player ✰</span>
+//                 <button class="close-button" onclick="closeWindow('${windowId}')">×</button>
+//             </div>
+//             <div class="notepad-body" style="padding: 0; height: calc(100% - 30px);">
+//                 <iframe src="musicPlayer/player.html" style="width: 100%; height: 100%; border: none;"></iframe>
+//             </div>
+//         `;
+//         document.body.appendChild(window);
+//         windows.music = window;
+//     }
+
+//     if (forcePosition) {
+//         window.style.left = '10px';
+//         window.style.top = '10px';
+//     }
+
+//     openWindow(windowId);
+// };
+
 
 const openWindow = (windowId, options = {}) => {
     const window = windows[windowId] || document.getElementById(windowId);
@@ -64,7 +99,8 @@ const openWindow = (windowId, options = {}) => {
         window.style.height = options.forceSize.height;
     }
     
-    positionWindow(window);
+    // Solo aplica posicionamiento relativo si no es la carga inicial
+    positionWindow(window, options.initialPosition);
     window.style.display = 'block';
     startMenu.style.display = 'none';
     
@@ -256,7 +292,10 @@ const abrirPostCompleto = async (postId) => {
     }
 };
 // Abrir ventana About al cargar la página
-window.addEventListener('DOMContentLoaded', () => openWindow('about'));
+window.addEventListener('DOMContentLoaded', () => {
+    openWindow('about', { initialPosition: true }); // Centrada y fija
+    openWindow('music', { initialPosition: true }); // Arriba a la derecha y fija
+});
 
 // Event listeners
 document.addEventListener('click', (e) => {
@@ -267,7 +306,7 @@ document.addEventListener('click', (e) => {
 
 // Asignación de funciones globales
 window.toggleStartMenu = toggleStartMenu;
-window.openAboutWindow = () => openWindow('about');
+window.openAboutWindow = () => openWindow('about');  // Posicionamiento normal
 window.openDiaryWindow = () => openWindow('diary', { forceSize: { width: '800px', height: '650px' } });
 window.openGalleryWindow = () => openWindow('gallery');
 window.openArtWindow = () => openWindow('art');
@@ -276,3 +315,4 @@ window.startDrag = startDrag;
 window.cargarBlog = cargarBlog;
 window.abrirPostCompleto = abrirPostCompleto;
 window.openImageWindow = openImageWindow;
+window.openMusicPlayer = () => openWindow('music');  // Posicionamiento normal

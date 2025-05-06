@@ -10,7 +10,7 @@
 
 body {
   margin: 0;
-  background: url('https://i.pinimg.com/736x/2d/ff/c6/2dffc606e621a4c158285bba9a041a6b.jpg') no-repeat center center fixed;
+  background: url('background.png') no-repeat center center fixed;
   background-size: cover;
   font-family: var(--win-font);
   color: var(--win-text);
@@ -305,3 +305,66 @@ body {
   margin: 10px 0;
   border: 1px solid #000;
 }
+
+/* Music Player Styles */
+.playlist {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.song {
+  padding: 8px;
+  margin: 5px 0;
+  background: var(--win-bg);
+  border: 2px outset #fff;
+  cursor: pointer;
+}
+
+.song:hover {
+  background: #a0a0a0;
+}
+
+.song:active {
+  border-style: inset;
+}
+
+#player {
+  background: var(--win-bg);
+  border: 2px inset #fff;
+  padding: 5px;
+}
+
+/* Estilos adicionales para el music player */
+.window iframe {
+    background: transparent;
+}
+
+#musicWindow {
+background-color: #ffffffa8;
+    min-width: 430px;
+    min-height: 180px;
+    top: 20px;
+    right: 20px;
+    left: auto; /* Esto anula cualquier left que pueda estar en el estilo inline */
+}
+
+#musicWindow .notepad-body {
+  padding: 0;
+  overflow: hidden;
+  height: calc(100% - 30px);
+  margin: 0; /* Asegura que no hay margen */
+}
+
+#aboutWindow {
+  background-color: #000000;
+    min-width: 200px;
+    min-height: 200px;
+    top: 20px;
+    right: 20px;
+    left: auto; /* Esto anula cualquier left que pueda estar en el estilo inline */
+}
+#aboutWindow .notepad-body {
+    padding: 0;
+    overflow: hidden;
+}
+

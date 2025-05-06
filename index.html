@@ -24,6 +24,10 @@
       <img src="https://i.ibb.co/svVr7w3T/paint.png" alt="Art">
       <div>Art</div>
     </div>
+    <div class="desktop-icon" onclick="openMusicPlayer()" title="Music Player">
+      <img src="https://i.ibb.co/Z6N6XvFT/music.png" alt="Music Player">
+      <div>Music Player</div>
+    </div>
   </div>
 
   <div class="start-bar">
@@ -50,16 +54,19 @@
       <img src="https://i.ibb.co/svVr7w3T/paint.png" alt="Art">
       <div>Art</div>
     </div>
+    <div class="desktop-icon" onclick="openMusicPlayer()" title="Music Player">
+      <img src="https://i.ibb.co/Z6N6XvFT/music.png" alt="Music Player">
+      <div>Music Player</div>
+    </div>
   </div>
 
-  <!-- Cambia display: none por display: block en la siguiente línea -->
-  <div id="aboutWindow" class="window" style="top: 100px; left: 150px; display: block; width: 480px; height: 320px;">
-    <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
+  <div id="aboutWindow" class="window" style="top: 100px; left: 50%; transform: translateX(-50%); display: block; width: 600px; height: 650px;">
+      <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
       <span>✰ About ✰</span>
       <button class="close-button" onclick="closeWindow('aboutWindow')">×</button>
     </div>
     <div class="notepad-body">
-      hola soy Mandy :)
+      <iframe src="about.html" style="width: 100%; height: 100%; border: none;"></iframe>
     </div>
   </div>
 
@@ -152,6 +159,21 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div id="musicWindow" class="window" style="top: 20px; right: 20px; width: 430px; height: 180px; display: block;">
+    <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
+        <span>✰ Music Player ✰</span>
+        <button class="close-button" onclick="closeWindow('musicWindow')">×</button>
+    </div>
+    <div class="notepad-body" style="padding: 0; height: calc(100% - 30px);">
+        <iframe src="musicPlayer/player.html" style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+</div>
+
+  <div id="fotm" class="FOTM" onmousedown="startDrag(event, this)" style="position: absolute; top: 61%; left: 88%; z-index: 1000;">
+    <p style="text-align: center">FORG OF THE MONTH</p>  
+    <img src="FOTM.png" alt="Frog of The Month" style="height: 25vh; width: auto;">
   </div>
 
   <script src="script.js"></script>
