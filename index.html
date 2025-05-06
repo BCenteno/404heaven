@@ -2,32 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Escritorio Windows 95</title>
+  <title>４ʘ４ｈｅａｖｅｎ</title>
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="desktop">
-    <div class="desktop-icon" onclick="openAboutWindow()" title="About">
-      <img src="https://i.ibb.co/CpVD8DXP/text-file-2.png" alt="About">
-      <div>About</div>
-    </div>
-    <div class="desktop-icon" onclick="openDiaryWindow()" title="Diary">
-      <img src="https://i.ibb.co/604BmYcZ/mail.png" alt="Diary">
-      <div>Diary</div>
-    </div>
-    <div class="desktop-icon" onclick="openGalleryWindow()" title="Gallery">
-      <img src="https://i.ibb.co/60NK1HD9/camera.png" alt="Gallery">
-      <div>Gallery</div>
-    </div>
-    <div class="desktop-icon" onclick="openArtWindow()" title="Art">
-      <img src="https://i.ibb.co/svVr7w3T/paint.png" alt="Art">
-      <div>Art</div>
-    </div>
-    <div class="desktop-icon" onclick="openMusicPlayer()" title="Music Player">
-      <img src="https://i.ibb.co/Z6N6XvFT/music.png" alt="Music Player">
-      <div>Music Player</div>
-    </div>
+    <!-- Iconos generados dinámicamente con JS -->
   </div>
 
   <div class="start-bar">
@@ -38,30 +19,12 @@
   </div>
 
   <div class="start-menu" id="startMenu">
-    <div class="desktop-icon" onclick="openAboutWindow()" title="About">
-      <img src="https://i.ibb.co/CpVD8DXP/text-file-2.png" alt="About">
-      <div>About</div>
-    </div>
-    <div class="desktop-icon" onclick="openDiaryWindow()" title="Diary">
-      <img src="https://i.ibb.co/604BmYcZ/mail.png" alt="Diary">
-      <div>Diary</div>
-    </div>
-    <div class="desktop-icon" onclick="openGalleryWindow()" title="Gallery">
-      <img src="https://i.ibb.co/60NK1HD9/camera.png" alt="Gallery">
-      <div>Gallery</div>
-    </div>
-    <div class="desktop-icon" onclick="openArtWindow()" title="Art">
-      <img src="https://i.ibb.co/svVr7w3T/paint.png" alt="Art">
-      <div>Art</div>
-    </div>
-    <div class="desktop-icon" onclick="openMusicPlayer()" title="Music Player">
-      <img src="https://i.ibb.co/Z6N6XvFT/music.png" alt="Music Player">
-      <div>Music Player</div>
-    </div>
+    <!-- Menú generado dinámicamente con JS -->
   </div>
 
-  <div id="aboutWindow" class="window" style="top: 100px; left: 50%; transform: translateX(-50%); display: block; width: 600px; height: 650px;">
-      <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
+  <!-- Ventanas principales -->
+  <div id="aboutWindow" class="window">
+    <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
       <span>✰ About ✰</span>
       <button class="close-button" onclick="closeWindow('aboutWindow')">×</button>
     </div>
@@ -70,110 +33,49 @@
     </div>
   </div>
 
-  <div id="diaryWindow" class="window" style="display: none; width: 800px; height: 650px;">
+  <div id="diaryWindow" class="window">
     <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
       <span>✰ Diary ✰</span>
       <button class="close-button" onclick="closeWindow('diaryWindow')">×</button>
     </div>
-    <div class="notepad-body" style="height: calc(100% - 30px); overflow: auto; padding: 0;">
-      <div id="contenedor-blog" style="height: 100%; padding: 20px;"></div>
+    <div class="notepad-body">
+      <div id="contenedor-blog"></div>
     </div>
-</div>
+  </div>
 
-  <div id="galleryWindow" class="window" style="top: 200px; left: 250px; display: none; width: 480px; height: 320px;">
+  <div id="galleryWindow" class="window">
     <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
       <span>✰ Gallery ✰</span>
       <button class="close-button" onclick="closeWindow('galleryWindow')">×</button>
     </div>
     <div class="notepad-body">
-      <div class="thumbnail-grid">
-        <div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/wF4LPWjd/20250503-175720.jpg', 'Pipa Long')">
-          <img src="https://i.ibb.co/wF4LPWjd/20250503-175720.jpg" alt="Pipa Long">
-          <div>Pipa Long</div>
-        </div>
-        <div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/yBfs5vG6/pipa.jpg', 'Pipa :)')">
-          <img src="https://i.ibb.co/yBfs5vG6/pipa.jpg" alt="Pipa :)">
-          <div>Pipa :)</div>
-        </div>
-      </div>
+      <div class="thumbnail-grid"></div>
     </div>
   </div>
 
-  <div id="artWindow" class="window" style="top: 250px; left: 300px; display: none; width: 480px; height: 320px;">
+  <div id="artWindow" class="window">
     <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
       <span>✰ Art ✰</span>
       <button class="close-button" onclick="closeWindow('artWindow')">×</button>
     </div>
     <div class="notepad-body">
-      <div class="thumbnail-grid">
-        <div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/gKkdzGF/girl2.jpg', 'Girl2')">
-          <img src="https://i.ibb.co/gKkdzGF/girl2.jpg" alt="Girl2">
-          <div>Girl2</div>
-        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/tgyTcYh/fish.jpg', 'Fisher')">
-          <img src="https://i.ibb.co/tgyTcYh/fish.jpg" alt="Fisher">
-          <div>Fisher</div>
-        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/QvH7C2Qs/cat.jpg', 'Dancing Cat')">
-          <img src="https://i.ibb.co/QvH7C2Qs/cat.jpg" alt="Dancing Cat">
-          <div>Dancing Cat</div>
-        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/Dfs4DQSL/girl.jpg', 'Girl')">
-          <img src="https://i.ibb.co/Dfs4DQSL/girl.jpg" alt="Girl">
-          <div>Girl</div>
-        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/QFWGLhgw/creepy.jpg', 'Creepy')">
-          <img src="https://i.ibb.co/QFWGLhgw/creepy.jpg" alt="Creepy">
-          <div>Creepy</div>
-        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/BVLq0Ftm/oc.jpg', 'OC(unnamed)2')">
-          <img src="https://i.ibb.co/BVLq0Ftm/oc.jpg" alt="OC(unnamed)2">
-          <div>OC(unnamed)2</div>
-        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/NgXW7VfG/ninja.jpg', 'Ninja')">
-          <img src="https://i.ibb.co/NgXW7VfG/ninja.jpg" alt="Ninja">
-          <div>Ninja</div>
-        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/r2rzf06R/oc2.jpg', 'OC(unnamed)')">
-          <img src="https://i.ibb.co/r2rzf06R/oc2.jpg" alt="OC(unnamed)">
-          <div>OC(unnamed)</div>
-        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/gLzLww1N/slime.jpg', 'SlimeHead')">
-          <img src="https://i.ibb.co/gLzLww1N/slime.jpg" alt="SlimeHead">
-          <div>SlimeHead</div>
-        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/Jw4VCj0K/spina.jpg', 'Spiky')">
-          <img src="https://i.ibb.co/Jw4VCj0K/spina.jpg" alt="Spiky">
-          <div>Spiky</div>
-        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/B2C7D0Nb/whale.jpg', 'Whale')">
-          <img src="https://i.ibb.co/B2C7D0Nb/whale.jpg" alt="Whale">
-          <div>Whale</div>
-        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/N64VPX27/tentacle.jpg', 'Tentacle')">
-          <img src="https://i.ibb.co/N64VPX27/tentacle.jpg" alt="Tentacle">
-          <div>Tentacle</div>
-        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/5gj3fNPw/two.jpg', 'Team')">
-          <img src="https://i.ibb.co/5gj3fNPw/two.jpg" alt="Team">
-          <div>Team</div>
-        </div><div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/1ftP96w6/asd.png', 'Axolotl Persona')">
-          <img src="https://i.ibb.co/1ftP96w6/asd.png" alt="Axolotl Persona">
-          <div>Axolotl Persona</div>
-        </div>
-        <div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/XM4sppJ/Sprite-0001.gif', 'First Pixel Art Animation')">
-          <img src="https://i.ibb.co/XM4sppJ/Sprite-0001.gif" alt="First Pixel Art Animation">
-          <div>First Pixel Art Animation</div>
-        </div>
-        <div class="thumbnail" onclick="openImageWindow('https://i.ibb.co/twnNcRKN/mumin.jpg', 'Mandy Moomin')">
-          <img src="https://i.ibb.co/twnNcRKN/mumin.jpg" alt="Mandy Moomin">
-          <div>Mandy Moomin</div>
-        </div>
-      </div>
+      <div class="thumbnail-grid"></div>
     </div>
   </div>
 
-  <div id="musicWindow" class="window" style="top: 20px; right: 20px; width: 430px; height: 180px; display: block;">
+  <div id="musicWindow" class="window">
     <div class="title-bar" onmousedown="startDrag(event, this.parentElement)">
-        <span>✰ Music Player ✰</span>
-        <button class="close-button" onclick="closeWindow('musicWindow')">×</button>
+      <span>✰ Music Player ✰</span>
+      <button class="close-button" onclick="closeWindow('musicWindow')">×</button>
     </div>
-    <div class="notepad-body" style="padding: 0; height: calc(100% - 30px);">
-        <iframe src="musicPlayer/player.html" style="width: 100%; height: 100%; border: none;"></iframe>
+    <div class="notepad-body">
+      <iframe src="musicPlayer/player.html" style="width: 100%; height: 100%; border: none;"></iframe>
     </div>
-</div>
+  </div>
 
-  <div id="fotm" class="FOTM" onmousedown="startDrag(event, this)" style="position: absolute; top: 61%; left: 88%; z-index: 1000;">
+  <div id="fotm" class="FOTM" onmousedown="startDrag(event, this)">
     <p style="text-align: center">FORG OF THE MONTH</p>  
-    <img src="FOTM.png" alt="Frog of The Month" style="height: 25vh; width: auto;">
+    <img src="FOTM.png" alt="Frog of The Month">
   </div>
 
   <script src="script.js"></script>

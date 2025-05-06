@@ -1,4 +1,3 @@
-/* ===== VARIABLES Y ESTILOS BASE ===== */
 :root {
   --win-bg: #C0C0C0;
   --win-text: black;
@@ -19,7 +18,6 @@ body {
   font-size: 20px;
 }
 
-/* ===== ELEMENTOS COMUNES ===== */
 .window, .start-menu, .start-bar {
   background-color: white;
   border: var(--win-border);
@@ -29,11 +27,11 @@ body {
 
 .button, .start-button, .win95-button, .close-button {
   font-family: var(--win-font);
-  cursor: pointer;
+  /* cursor: pointer; */
   border-style: outset;
 }
 
-/* ===== ESCRITORIO ===== */
+/* Escritorio */
 #desktop {
   position: relative;
   width: 100%;
@@ -49,7 +47,7 @@ body {
 .desktop-icon {
   width: 100px;
   text-align: center;
-  cursor: pointer;
+  /* cursor: pointer; */
   color: var(--win-text);
   font-size: 25px;
 }
@@ -59,7 +57,7 @@ body {
   height: 64px;
 }
 
-/* ===== BARRA DE INICIO ===== */
+/* Barra de inicio */
 .start-bar {
   position: absolute;
   bottom: 0;
@@ -110,19 +108,20 @@ body {
   font-size: 18px;
 }
 
-/* ===== VENTANAS ===== */
+/* Ventanas */
 .window {
   position: absolute;
   overflow: hidden;
   z-index: 10;
   font-size: 20px;
-  min-width: 550px;
-  min-height: 400px;
+  min-width: 200px;
+  min-height: 200px;
+  display: none;
 }
 
 #diaryWindow {
-  width: 800px !important;
-  height: 650px !important;
+  width: 800px;
+  height: 650px;
 }
 
 .title-bar {
@@ -132,7 +131,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  cursor: move;
+  /* cursor: move; */
   height: 30px;
   box-sizing: border-box;
 }
@@ -156,23 +155,24 @@ body {
   line-height: 1.4;
 }
 
-#diaryWindow .notepad-body {
+#diaryWindow .notepad-body,
+#musicWindow .notepad-body,
+#aboutWindow .notepad-body {
   padding: 0;
   overflow: hidden;
   height: calc(100% - 30px);
 }
 
-/* ===== CONTENEDORES ===== */
-.thumbnail-grid, .image-container {
-  display: flex;
-}
-
+/* Contenedores */
 .thumbnail-grid {
+  display: flex;
   flex-wrap: wrap;
   gap: 40px;
+  padding: 14px;
 }
 
 .image-container {
+  display: flex;
   width: 100%;
   height: calc(100% - 30px);
   align-items: center;
@@ -183,26 +183,24 @@ body {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  display: block;
 }
 
 .thumbnail {
   width: 80px;
   text-align: center;
-  cursor: pointer;
+  /* cursor: pointer; */
   font-size: 16px;
   color: var(--win-text);
 }
 
 .thumbnail img {
-  text-align: center;
   width: 100px;
   height: 100px;
   display: block;
   margin: 0 auto 5px;
 }
 
-/* ===== BLOG ===== */
+/* Blog */
 #contenedor-blog {
   height: 100%;
   overflow-y: auto;
@@ -250,7 +248,7 @@ body {
   margin-top: 8px;
 }
 
-/* ===== BOTONES ===== */
+/* Botones */
 .win95-button {
   background: var(--win-bg);
   border: 2px outset #fff;
@@ -262,17 +260,13 @@ body {
   border-style: inset;
 }
 
-/* ===== SCROLLBAR ESTILO WINDOWS 95 ===== */
-/* Scrollbar principal (Diary) */
-#contenedor-blog::-webkit-scrollbar,
-/* Scrollbar de posts individuales */
-.post-content::-webkit-scrollbar {
+/* Scrollbar */
+::-webkit-scrollbar {
   width: 16px;
   background-color: var(--win-bg);
 }
 
-#contenedor-blog::-webkit-scrollbar-track,
-.post-content::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: var(--win-bg);
   border-left: 2px solid #fff;
   border-right: 2px solid #404040;
@@ -280,23 +274,25 @@ body {
   border-bottom: 2px solid #404040;
 }
 
-#contenedor-blog::-webkit-scrollbar-thumb,
-.post-content::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: var(--win-bg);
   border: 2px outset #fff;
-  box-shadow: inset 1px 1px 0 #404040, 
-              inset -1px -1px 0 #404040;
+  box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #404040;
 }
 
-/* Efecto al hacer hover */
-#contenedor-blog::-webkit-scrollbar-thumb:hover,
-.post-content::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: #a0a0a0;
 }
 
-/* ===== CONTENIDO DE POST ===== */
+/* Contenido de post */
 .post-content {
   font-size: 18px;
+  height: 100%;
+  overflow-y: auto;
+  padding: 15px;
+  font-family: 'Pixelify Sans', sans-serif;
+  line-height: 1.5;
+  box-sizing: border-box;
 }
 
 .post-content img {
@@ -304,67 +300,38 @@ body {
   height: auto;
   margin: 10px 0;
   border: 1px solid #000;
+  /* cursor: zoom-in; */
 }
 
-/* Music Player Styles */
-.playlist {
-  margin-top: 20px;
-  text-align: left;
-}
-
-.song {
-  padding: 8px;
-  margin: 5px 0;
-  background: var(--win-bg);
-  border: 2px outset #fff;
-  cursor: pointer;
-}
-
-.song:hover {
-  background: #a0a0a0;
-}
-
-.song:active {
-  border-style: inset;
-}
-
-#player {
-  background: var(--win-bg);
-  border: 2px inset #fff;
-  padding: 5px;
-}
-
-/* Estilos adicionales para el music player */
-.window iframe {
-    background: transparent;
-}
-
+/* Music Player */
 #musicWindow {
-background-color: #ffffffa8;
-    min-width: 430px;
-    min-height: 180px;
-    top: 20px;
-    right: 20px;
-    left: auto; /* Esto anula cualquier left que pueda estar en el estilo inline */
-}
-
-#musicWindow .notepad-body {
-  padding: 0;
-  overflow: hidden;
-  height: calc(100% - 30px);
-  margin: 0; /* Asegura que no hay margen */
+  background-color: #ffffffa8;
+  min-width: 430px;
+  min-height: 180px;
+  top: 20px;
+  right: 20px;
+  left: auto;
 }
 
 #aboutWindow {
   background-color: #000000;
-    min-width: 200px;
-    min-height: 200px;
-    top: 20px;
-    right: 20px;
-    left: auto; /* Esto anula cualquier left que pueda estar en el estilo inline */
-}
-#aboutWindow .notepad-body {
-    padding: 0;
-    overflow: hidden;
+  min-width: 600px;
+  min-height: 650px;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
+/* Frog of the Month */
+.FOTM {
+  position: absolute;
+  top: 61%;
+  left: 88%;
+  z-index: 1000;
+  text-align: center;
+}
+
+.FOTM img {
+  height: 25vh;
+  width: auto;
+}
