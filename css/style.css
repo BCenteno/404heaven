@@ -799,6 +799,60 @@ body:has(.page){ display:block; padding:0; }
 .site-footer a:hover{ color:var(--white); }
 
 /* =======================================================
+   UNDER CONSTRUCTION
+   Lo que todavía no está listo. Un mismo bloque en tres
+   tamaños: .uc--slim (la barra de links de la home), .uc a
+   secas (widgets de la home) y .uc--page (páginas enteras).
+======================================================= */
+
+.uc{
+    flex:1;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:.375rem;
+}
+
+/* cinta de obra: rayas de css, no caracteres, así llena el ancho que sea */
+.uc-tape{
+    width:100%;
+    height:.375rem;
+    flex-shrink:0;
+    opacity:.45;
+    background:repeating-linear-gradient(
+        -45deg,
+        var(--gold) 0 .1875rem,
+        transparent .1875rem .4375rem
+    );
+}
+
+.uc-sign{ font-size:.66rem; color:var(--vio-soft); }
+
+.uc-title{
+    color:var(--gold);
+    font-size:.8125rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    animation:uc-blink 1.8s steps(1,end) infinite;
+}
+@keyframes uc-blink{ 50%{ opacity:.4; } }
+
+.uc-note{ font-size:.75rem; color:var(--vio-soft); max-width:28rem; }
+.uc-back{ font-size:.72rem; color:var(--vio-faint); }
+
+/* barra de "links i like": una sola línea, sin cartel */
+.uc--slim{ gap:.1875rem; }
+.uc--slim .uc-line{ font-size:.72rem; color:var(--vio-soft); }
+
+/* páginas enteras: el mismo bloque, con aire */
+.uc--page{ padding:3.25rem 0; gap:.625rem; }
+.uc--page .uc-sign{ font-size:.8125rem; margin:.375rem 0; }
+.uc--page .uc-title{ font-size:1rem; }
+
+/* =======================================================
    RESPONSIVE — la home fija se vuelve una columna
    Solo en pantallas realmente estrechas: en desktop el
    diseño escala en vez de reordenarse.
@@ -823,7 +877,7 @@ body:has(.page){ display:block; padding:0; }
 }
 
 @media (prefers-reduced-motion:reduce){
-    .ws-star,.gb-track.is-scrolling{ animation:none; }
+    .ws-star,.gb-track.is-scrolling,.uc-title{ animation:none; }
     .welcome-screen,.dither-wrap canvas,.col-icon{ transition:none; }
 }
 

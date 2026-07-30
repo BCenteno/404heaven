@@ -204,27 +204,44 @@
                         <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
                     </div>
                     <div class="win__body">
-                        <div class="np-top">
-                            <!-- becomes the real youtube player when CONFIG.playlistId is set -->
-                            <div class="np-video" id="np-frame">
-                                <span>set playlist id<br>in js/main.js</span>
-                            </div>
-                            <div class="np-meta">
-                                <p class="np-title" id="np-title">Portishead</p>
-                                <p class="np-album" id="np-album">Dummy (1994)</p>
-                                <p class="np-track" id="np-track">01. Mysterons</p>
-                                <p class="np-time"  id="np-time">1:23 / 5:06</p>
-                            </div>
-                        </div>
-                        <div class="np-bottom">
-                            <hr class="dotrule">
-                            <div class="np-controls">
-                                <button id="np-prev" aria-label="previous track">◀◀</button>
-                                <button id="np-play" aria-label="play or pause">▮▮</button>
-                                <button id="np-next" aria-label="next track">▶▶</button>
-                            </div>
+                        <div class="uc">
+                            <div class="uc-tape" aria-hidden="true"></div>
+                            <pre class="ascii uc-sign" aria-hidden="true"> ________
+| /!\/!\ |
+|________|</pre>
+                            <p class="uc-title">under construction</p>
+                            <p class="uc-note">the player is being wired up. music soon.</p>
+                            <div class="uc-tape" aria-hidden="true"></div>
                         </div>
                     </div>
+
+                    <!-- el reproductor real vuelve borrando el bloque .uc de arriba
+                         y sacando este <template>. El JS de now playing se activa
+                         solo cuando #np-frame existe de verdad en la página. -->
+                    <template class="uc-parked">
+                        <div class="win__body">
+                            <div class="np-top">
+                                <!-- becomes the real youtube player when CONFIG.playlistId is set -->
+                                <div class="np-video" id="np-frame">
+                                    <span>set playlist id<br>in js/main.js</span>
+                                </div>
+                                <div class="np-meta">
+                                    <p class="np-title" id="np-title">Portishead</p>
+                                    <p class="np-album" id="np-album">Dummy (1994)</p>
+                                    <p class="np-track" id="np-track">01. Mysterons</p>
+                                    <p class="np-time"  id="np-time">1:23 / 5:06</p>
+                                </div>
+                            </div>
+                            <div class="np-bottom">
+                                <hr class="dotrule">
+                                <div class="np-controls">
+                                    <button id="np-prev" aria-label="previous track">◀◀</button>
+                                    <button id="np-play" aria-label="play or pause">▮▮</button>
+                                    <button id="np-next" aria-label="next track">▶▶</button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </article>
 
                 <article class="window brain">
@@ -275,17 +292,34 @@ _ (`-`) _
                         <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
                     </div>
                     <div class="win__body">
-                        <p class="jp-title" id="hj-title">slow days</p>
-                        <p class="jp-date"  id="hj-date">2026-07-17</p>
-                        <hr class="dotrule">
-                        <div class="jp-scroll">
-                            <div class="jp-body" id="hj-body">
-                                <p>today was one of those slow, quiet days i didn't plan. i soldered a bit, read a few pages, and watched the rain from my window.</p>
-                                <p>these are the days that remind me to breathe.</p>
-                            </div>
+                        <div class="uc">
+                            <div class="uc-tape" aria-hidden="true"></div>
+                            <pre class="ascii uc-sign" aria-hidden="true"> ________
+| /!\/!\ |
+|________|</pre>
+                            <p class="uc-title">under construction</p>
+                            <p class="uc-note">still writing. the first entries land soon.</p>
+                            <div class="uc-tape" aria-hidden="true"></div>
                         </div>
-                        <a class="blink" href="journal.html">[ read more → ]</a>
                     </div>
+
+                    <!-- el widget real vuelve borrando el bloque .uc de arriba y
+                         sacando este <template>. El JS del journal solo escribe
+                         aquí cuando #hj-title existe de verdad en la página. -->
+                    <template class="uc-parked">
+                        <div class="win__body">
+                            <p class="jp-title" id="hj-title">slow days</p>
+                            <p class="jp-date"  id="hj-date">2026-07-17</p>
+                            <hr class="dotrule">
+                            <div class="jp-scroll">
+                                <div class="jp-body" id="hj-body">
+                                    <p>today was one of those slow, quiet days i didn't plan. i soldered a bit, read a few pages, and watched the rain from my window.</p>
+                                    <p>these are the days that remind me to breathe.</p>
+                                </div>
+                            </div>
+                            <a class="blink" href="journal.html">[ read more → ]</a>
+                        </div>
+                    </template>
                 </article>
 
                 <article class="window bug" id="latest-bug">
@@ -317,15 +351,26 @@ _ (`-`) _
                     <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
                 </div>
                 <div class="win__body">
-                    <div class="linkrow">
-                        <a class="linkbtn" href="https://archive.org" target="_blank" rel="noopener"><span class="ico">🏛</span> internet<br>archive</a>
-                        <a class="linkbtn" href="https://neocities.org" target="_blank" rel="noopener"><span class="ico">🐱</span> neocities</a>
-                        <a class="linkbtn linkbtn--lit" href="https://wiby.me" target="_blank" rel="noopener"><span class="ico">☾</span> lazy web</a>
-                        <a class="linkbtn" href="https://neal.fun" target="_blank" rel="noopener"><span class="ico">🌐</span> cool<br>websites</a>
-                        <a class="linkbtn" href="https://www.cameronsworld.net" target="_blank" rel="noopener">worldofos</a>
-                        <a class="linkbtn" href="https://wiby.me/surprise/" target="_blank" rel="noopener"><span class="ico">🌐</span> dan's old<br>skool stuff</a>
+                    <div class="uc uc--slim">
+                        <div class="uc-tape" aria-hidden="true"></div>
+                        <p class="uc-line"><span class="uc-title">under construction</span> — still collecting the good ones</p>
                     </div>
                 </div>
+
+                <!-- los botones vuelven borrando el bloque .uc de arriba
+                     y sacando este <template>. -->
+                <template class="uc-parked">
+                    <div class="win__body">
+                        <div class="linkrow">
+                            <a class="linkbtn" href="https://archive.org" target="_blank" rel="noopener"><span class="ico">🏛</span> internet<br>archive</a>
+                            <a class="linkbtn" href="https://neocities.org" target="_blank" rel="noopener"><span class="ico">🐱</span> neocities</a>
+                            <a class="linkbtn linkbtn--lit" href="https://wiby.me" target="_blank" rel="noopener"><span class="ico">☾</span> lazy web</a>
+                            <a class="linkbtn" href="https://neal.fun" target="_blank" rel="noopener"><span class="ico">🌐</span> cool<br>websites</a>
+                            <a class="linkbtn" href="https://www.cameronsworld.net" target="_blank" rel="noopener">worldofos</a>
+                            <a class="linkbtn" href="https://wiby.me/surprise/" target="_blank" rel="noopener"><span class="ico">🌐</span> dan's old<br>skool stuff</a>
+                        </div>
+                    </div>
+                </template>
             </section>
 
             <!-- FOOTER -->

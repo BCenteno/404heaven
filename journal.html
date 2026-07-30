@@ -36,10 +36,37 @@
       </div>
       <div class="win__body page-head">
         <h1>journal</h1>
-        <p class="sub">thoughts, projects, slow days. loaded from my blog when it's feeling cooperative.</p>
+        <p class="sub">thoughts, projects, slow days. not open to visitors just yet.</p>
       </div>
     </div>
     <div class="star-rule" aria-hidden="true">☆ . . . . . . . . . . . . . . . . . . . . . . . . ☆</div>
+    <section class="win">
+      <div class="win__bar">
+        <span class="icon" aria-hidden="true">✎</span>
+        <span class="title">under construction</span>
+        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+      </div>
+      <div class="win__body">
+        <div class="uc uc--page">
+          <div class="uc-tape" aria-hidden="true"></div>
+          <pre class="ascii uc-sign" aria-hidden="true"> ______________
+| /!\ /!\ /!\  |
+|______________|
+      |  |
+      |  |
+~~~~~~~~~~~~~~~~</pre>
+          <p class="uc-title">under construction</p>
+          <p class="uc-note">the entries are still drafts on my desk. come back in a bit and there'll be something to read here.</p>
+          <p class="uc-back"><a href="index.html">[ ← back home ]</a></p>
+          <div class="uc-tape" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Las entradas vuelven borrando la ventana .uc de arriba y sacando este
+         <template>. Con el id #journal-feed dentro del template, el JS del
+         blogspot tampoco escribe nada mientras la página esté en obras. -->
+    <template class="uc-parked">
     <!-- if CONFIG.blogspotUrl is set in js/main.js, this container is
          auto-filled with your latest blogspot posts -->
     <div class="stack" id="journal-feed">
@@ -86,6 +113,7 @@
       </div>
     </section>
     </div>
+    </template>
   </main>
 </div>
 <div class="lightbox" id="lightbox" aria-hidden="true"><img alt=""></div>

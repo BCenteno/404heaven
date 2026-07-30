@@ -20,7 +20,9 @@
       "Bash(curl -s https://pzjlbkrezhahaougowyw.supabase.co/rest/v1/ -H 'apikey: sb_publishable_Xk3NbMoMvCGKs7TY_40rHg_JCV0MuBW' -H 'Authorization: Bearer sb_publishable_Xk3NbMoMvCGKs7TY_40rHg_JCV0MuBW')",
       "Bash(curl -s -w ' HTTP %{http_code}\\\\n' 'https://pzjlbkrezhahaougowyw.supabase.co/rest/v1/photos?select=*&section=eq.bug&order=taken_at.desc' -H 'apikey: __TRACKED_VAR__' -H 'Authorization: Bearer __TRACKED_VAR__')",
       "Bash(\"/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe\" --headless=new --disable-gpu --no-sandbox --virtual-time-budget=9000 --window-size=1500,1000 --user-data-dir=\"C:/Users/Usuario/AppData/Local/Temp/claude/edgeD\" --dump-dom \"http://127.0.0.1:5599/__probeC.html\")",
-      "Bash(curl -s -w '\\\\nHTTP %{http_code}\\\\n' -X POST https://pzjlbkrezhahaougowyw.supabase.co/functions/v1/imagekit-auth)"
+      "Bash(curl -s -w '\\\\nHTTP %{http_code}\\\\n' -X POST https://pzjlbkrezhahaougowyw.supabase.co/functions/v1/imagekit-auth)",
+      "Bash(ls \"/c/Program Files/Google/Chrome/Application/chrome.exe\" \"/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe\" 2>/dev/null)",
+      "Read(//c/Program Files/Google/Chrome/Application/**)"
     ]
   }
 }
