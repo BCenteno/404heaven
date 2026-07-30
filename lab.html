@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404heaven — lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="inner">
+<div class="page">
+  <aside class="sidebar">
+    <nav class="win" aria-label="main navigation">
+      <div class="win__bar">
+        <span class="title">navigate</span>
+        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+      </div>
+      <ul class="nav-list">
+        <li><a href="index.html"><span class="nav-ico">⌂</span>/ home</a></li>
+        <li><a href="journal.html"><span class="nav-ico">✎</span>/ journal</a></li>
+        <li><a href="memories.html"><span class="nav-ico">▣</span>/ memories</a></li>
+        <li><a href="collections.html"><span class="nav-ico">✩</span>/ collections</a></li>
+        <li><a href="lab.html" aria-current="page"><span class="nav-ico">⚗</span>/ lab</a></li>
+        <li><a href="art.html"><span class="nav-ico">✿</span>/ art dump</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="win page-head-win">
+      <div class="win__bar">
+        <span class="icon" aria-hidden="true">⚗</span>
+        <span class="title">lab</span>
+        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+      </div>
+      <div class="win__body page-head">
+        <h1>lab</h1>
+        <p class="sub">arduino, esp32, soldering fumes, and things that blink when they shouldn't.</p>
+      </div>
+    </div>
+    <div class="star-rule" aria-hidden="true">☆ . . . . . . . . . . . . . . . . . . . . . . . . ☆</div>
+    <div class="grid-2">
+    <section class="win">
+      <div class="win__bar">
+        <span class="icon" aria-hidden="true">⚗</span>
+        <span class="title">project 01</span>
+        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+      </div>
+      <div class="win__body">
+        <h2 class="jp-title">diy face tracking for vr <span class="status status--wip">in progress</span></h2>
+        <hr class="dotrule">
+        <div class="jp-body"><p>an esp32-cam, a wide-angle lens, ir leds, and a dream: mouth tracking in vrchat without commercial-hardware prices.</p></div>
+        <ul class="plainlist"><li>flash camera firmware <span class="note">done ✓</span></li><li>stable video stream <span class="note">done ✓</span></li><li>osc bridge to vr <span class="note">next</span></li><li>ir camera + leds <span class="note">parts arrived</span></li></ul>
+      </div>
+    </section>
+    <section class="win">
+      <div class="win__bar">
+        <span class="icon" aria-hidden="true">⚗</span>
+        <span class="title">project 02</span>
+        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+      </div>
+      <div class="win__body">
+        <h2 class="jp-title">argb without an argb header <span class="status status--wip">in progress</span></h2>
+        <hr class="dotrule">
+        <div class="jp-body"><p>the motherboard has no 5v argb header, so a microcontroller running wled became a standalone lighting controller. the pc doesn't even know.</p></div>
+        <ul class="plainlist"><li>wled flashed & running <span class="note">done ✓</span></li><li>level shifter wiring <span class="note">testing</span></li><li>sync with games? <span class="note">stretch goal</span></li></ul>
+      </div>
+    </section>
+    <section class="win">
+      <div class="win__bar">
+        <span class="icon" aria-hidden="true">⚗</span>
+        <span class="title">project 03</span>
+        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+      </div>
+      <div class="win__body">
+        <h2 class="jp-title">this very website <span class="status status--live">live</span></h2>
+        <hr class="dotrule">
+        <div class="jp-body"><p>hand-written html, css and js. no frameworks, no build step, no node_modules heavier than my soul.</p></div>
+      </div>
+    </section>
+    <section class="win">
+      <div class="win__bar">
+        <span class="icon" aria-hidden="true">⚗</span>
+        <span class="title">project 04</span>
+        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+      </div>
+      <div class="win__body">
+        <h2 class="jp-title">desk sensor station <span class="status">someday</span></h2>
+        <hr class="dotrule">
+        <div class="jp-body"><p>temperature, humidity, and a tiny screen that judges how long i've been sitting. an excuse to design my first real pcb.</p></div>
+      </div>
+    </section>
+    </div>
+  </main>
+</div>
+<div class="lightbox" id="lightbox" aria-hidden="true"><img alt=""></div>
+<script src="js/main.js"></script>
+</body>
+</html>

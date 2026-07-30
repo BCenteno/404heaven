@@ -1,0 +1,5 @@
+# nunca commitear secrets ni artefactos locales de supabase
+.env
+.env.*
+.branches
+.temp

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404heaven — guestbook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="inner">
+<div class="page">
+  <aside class="sidebar">
+    <nav class="win" aria-label="main navigation">
+      <div class="win__bar">
+        <span class="title">navigate</span>
+        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+      </div>
+      <ul class="nav-list">
+        <li><a href="index.html"><span class="nav-ico">⌂</span>/ home</a></li>
+        <li><a href="journal.html"><span class="nav-ico">✎</span>/ journal</a></li>
+        <li><a href="memories.html"><span class="nav-ico">▣</span>/ memories</a></li>
+        <li><a href="collections.html"><span class="nav-ico">✩</span>/ collections</a></li>
+        <li><a href="lab.html"><span class="nav-ico">⚗</span>/ lab</a></li>
+        <li><a href="art.html"><span class="nav-ico">✿</span>/ art dump</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <main class="content">
+    <section class="win gb">
+      <div class="win__bar">
+        <span class="title">guestbook — all entries</span>
+        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+      </div>
+      <div class="win__body">
+        <p class="gb-head">sign my guestbook!</p>
+        <div class="gb-book ascii" aria-hidden="true">. ݁₊ ⊹ . ݁ ⟡ ݁ . ⊹ ₊ ݁.</div>
+        <div class="gb-entries" id="gb-entries" style="overflow:visible;">
+          <div class="gb-entry">
+            <p class="who">luna</p>
+            <p class="msg">love your site!!</p>
+            <p class="when">– 2026-07-18</p>
+          </div>
+          <div class="gb-entry">
+            <p class="who">pixelghost</p>
+            <p class="msg">such a cozy place</p>
+            <p class="when">– 2026-07-17</p>
+          </div>
+          <div class="gb-entry">
+            <p class="who">mothlover</p>
+            <p class="msg">the bug of the month is amazing :)</p>
+            <p class="when">– 2026-07-16</p>
+          </div>
+        </div>
+        <hr class="dotrule">
+        <form class="gb-form" id="gb-form">
+          <input type="text" id="gb-name" placeholder="name" maxlength="30" required>
+          <textarea id="gb-msg" placeholder="message" maxlength="180" required></textarea>
+          <button type="submit">[ sign ]</button>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="lightbox" id="lightbox" aria-hidden="true"><img alt=""></div>
+<script src="js/main.js"></script>
+</body>
+</html>

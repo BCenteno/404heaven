@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404heaven</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- ========================================= -->
+    <!-- WELCOME SCREEN (front door)               -->
+    <!-- "best viewed on" lives here               -->
+    <!-- ========================================= -->
+
+    <div class="welcome-screen" id="welcome-screen" hidden>
+        <span class="ws-star" style="top:12%; left:16%;">✦</span>
+        <span class="ws-star" style="top:22%; right:20%; animation-delay:1.2s;">·</span>
+        <span class="ws-star" style="bottom:24%; left:24%; animation-delay:2s;">*</span>
+        <span class="ws-star" style="bottom:16%; right:14%; animation-delay:.6s;">✦</span>
+
+        <div class="ws-inner">
+            <pre class="logo-ascii" aria-label="404heaven">    ░█▓█     ▓▓███▒░      ░█▓█   ▒██░
+   ▒████░   ███░░▓██░    ▒████░  ░██▒ ▒░░     ░░▒░░     ░░▒░▒     ░     ░ ░   ░░▒░░     ░  ░▒░░
+  ▒█░▓██   ▒██░  ░██▒   ▒█░▒██   ▒██▓█▓██▓   ▒▓█▓███▒  ░▓█▓███▓░ ▒██░  ░██░  ███▓██▓   ███▓████░
+░▓█░ ▒██░  ▒██▒   ███ ░▓█░ ▒██░  ▒██▓  ▒██░ ▒██▓▒░▓██▒  ▒▒▓▒███▒  ███  ▓██  ███░▒░███  ███░ ░██▓
+▓█▓▓▒███▒▒ ▒██░  ░██▒ ▒█▓▒▒███▓▒ ▒██░  ▒██  ▒██▓▒▓▒▓▒▒ ▓██▒▒▒██▓   ██▒░██░ ░██▓▓▒▓▒▓▒  ███   ███
+▒▒▓▓▓▓██▓▒  ███░░▓██░ ▒▒▓▒▓████▒ ░██▒  ▒██░ ░██▓░ ░░▓  ███░ ▓██▓   ▒████▓   ▓██░░ ▒▒▒  ██▓   ██▓
+     ▓██     ▓▓███▒░       ▒██   ▒██░  ▒██   ░▒█████▒  ░▓███▒██▓    ▓███     ▒▓███▓▓░  ███   ███</pre>
+
+            <p class="ws-msg">you've reached 404heaven.</p>
+            <p class="ws-msg-2">a little corner of the internet where i keep pieces of my mind.<br>take your time.</p>
+
+            <button class="ws-enter" id="ws-enter">enter</button>
+
+            <div class="window best">
+                <div class="win__bar">
+                    <span class="title">best viewed on</span>
+                    <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+                </div>
+                <div class="win__body">
+                    <p>anything</p>
+                    <p>with curiosity</p>
+                    <p>and low expectations</p>
+                    <pre class="ascii" aria-hidden="true"> ________
+| .----. |
+| | ^^ | |
+| '----' |
+|________|
+ \_○__○_/</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout">
+
+        <!-- ========================================= -->
+        <!-- SIDEBAR -->
+        <!-- ========================================= -->
+
+        <aside class="sidebar">
+
+            <div class="window nav">
+                <div class="win__bar">
+                    <span class="title">navigate</span>
+                    <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+                </div>
+                <ul class="nav-list">
+                    <li><a href="index.html" aria-current="page">
+                        <span class="nav-ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 8 2l6 6M4 7v7h8V7M7 14v-4h2v4"/></svg></span>/ home</a></li>
+                    <li><a href="journal.html">
+                        <span class="nav-ico"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="2" width="9" height="12"/><path d="M5.5 5h5M5.5 7.5h5M5.5 10h3.5"/></svg></span>/ journal</a></li>
+                    <li><a href="memories.html">
+                        <span class="nav-ico"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="4.5" width="12" height="9"/><path d="M5.5 4.5 6.7 2.5h2.6l1.2 2"/><circle cx="8" cy="9" r="2.4"/></svg></span>/ memories</a></li>
+                    <li><a href="collections.html">
+                        <span class="nav-ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 9.7 5.8l4.3.4-3.3 2.9 1 4.3L8 11.1l-3.7 2.3 1-4.3L2 6.2l4.3-.4z"/></svg></span>/ collections</a></li>
+                    <li><a href="lab.html">
+                        <span class="nav-ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2h4M7 2v4l-3.6 6.4c-.6 1 .1 2.1 1.2 2.1h6.8c1.1 0 1.8-1.1 1.2-2.1L9 6V2M5 11h6"/></svg></span>/ lab</a></li>
+                    <li><a href="art.html">
+                        <span class="nav-ico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2a6 6 0 1 0 0 12c1 0 1.4-.7 1-1.5-.5-1 .1-2 1.2-2H12a2.5 2.5 0 0 0 2-2.5C14 4.5 11.3 2 8 2z"/><circle cx="5.4" cy="6" r=".6"/><circle cx="8.4" cy="4.8" r=".6"/><circle cx="11" cy="6.4" r=".6"/></svg></span>/ art dump</a></li>
+                </ul>
+            </div>
+
+            <div class="window counter">
+                <div class="win__bar">
+                    <span class="title">visitor counter</span>
+                    <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+                </div>
+                <div class="win__body">
+                    <p class="label">you are visitor #</p>
+                    <p class="digits" id="visitor-counter">000421</p>
+                    <p class="thanks">thank you for stopping by!</p>
+                    <p class="ascii" aria-hidden="true">૮꒰ ˶• ༝ •˶꒱ა ♡</p>
+                </div>
+            </div>
+
+            <div class="window guestbook">
+                <div class="win__bar">
+                    <span class="title">guestbook</span>
+                    <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+                </div>
+                <div class="win__body">
+                    <p class="gb-head">sign my guestbook!</p>
+                    <div class="gb-book ascii" aria-hidden="true">. ݁₊ ⊹ . ݁ ⟡ ݁ . ⊹ ₊ ݁.</div>
+
+                    <div class="gb-entries" id="gb-entries">
+                        <div class="gb-track" id="gb-track">
+                            <div class="gb-entry">
+                                <p class="who">luna</p>
+                                <p class="msg">love your site!!</p>
+                                <p class="when">– 2026-07-18</p>
+                            </div>
+                            <div class="gb-entry">
+                                <p class="who">pixelghost</p>
+                                <p class="msg">such a cozy place</p>
+                                <p class="when">– 2026-07-17</p>
+                            </div>
+                            <div class="gb-entry">
+                                <p class="who">mothlover</p>
+                                <p class="msg">the bug of the month is amazing :)</p>
+                                <p class="when">– 2026-07-16</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gb-actions">
+                        <a class="blink" href="guestbook.html#gb-form">[ sign guestbook ]</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright">
+                © 2026 Mandy<br>all rights reserved
+            </div>
+
+        </aside>
+
+        <!-- ========================================= -->
+        <!-- MAIN -->
+        <!-- ========================================= -->
+
+        <main class="main">
+
+            <!-- HEADER -->
+
+            <header class="hero">
+
+                <div class="logo">
+                    <span class="sparkle" style="top:0;    left:9%;"  aria-hidden="true">⁺₊</span>
+                    <span class="sparkle" style="top:46px; left:4%;"  aria-hidden="true">*</span>
+                    <span class="sparkle" style="top:8px;  left:22%;" aria-hidden="true">·</span>
+                    <span class="sparkle" style="top:54px; right:24%;" aria-hidden="true">✧</span>
+                    <span class="sparkle" style="top:6px;  right:32%;" aria-hidden="true">·</span>
+                    <span class="moon" aria-hidden="true">☾</span>
+                    <pre class="logo-ascii" aria-label="404heaven">    ░█▓█     ▓▓███▒░      ░█▓█   ▒██░
+   ▒████░   ███░░▓██░    ▒████░  ░██▒ ▒░░     ░░▒░░     ░░▒░▒     ░     ░ ░   ░░▒░░     ░  ░▒░░
+  ▒█░▓██   ▒██░  ░██▒   ▒█░▒██   ▒██▓█▓██▓   ▒▓█▓███▒  ░▓█▓███▓░ ▒██░  ░██░  ███▓██▓   ███▓████░
+░▓█░ ▒██░  ▒██▒   ███ ░▓█░ ▒██░  ▒██▓  ▒██░ ▒██▓▒░▓██▒  ▒▒▓▒███▒  ███  ▓██  ███░▒░███  ███░ ░██▓
+▓█▓▓▒███▒▒ ▒██░  ░██▒ ▒█▓▒▒███▓▒ ▒██░  ▒██  ▒██▓▒▓▒▓▒▒ ▓██▒▒▒██▓   ██▒░██░ ░██▓▓▒▓▒▓▒  ███   ███
+▒▒▓▓▓▓██▓▒  ███░░▓██░ ▒▒▓▒▓████▒ ░██▒  ▒██░ ░██▓░ ░░▓  ███░ ▓██▓   ▒████▓   ▓██░░ ▒▒▒  ██▓   ██▓
+     ▓██     ▓▓███▒░       ▒██   ▒██░  ▒██   ░▒█████▒  ░▓███▒██▓    ▓███     ▒▓███▓▓░  ███   ███</pre>
+                    <p class="tagline">welcome to my little corner of the web</p>
+                    <div class="star-rule" aria-hidden="true">☆ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ☆</div>
+                </div>
+
+            </header>
+
+            <!-- FILA 1 -->
+
+            <section class="row">
+
+                <article class="window welcome">
+                    <div class="win__bar">
+                        <span class="icon" aria-hidden="true">✧</span>
+                        <span class="title">welcome</span>
+                        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+                    </div>
+                    <div class="win__body">
+                        <pre class="ascii" aria-hidden="true">`'::::.
+           ____||_         ☾
+✴     /      /\   ⋆  
+⟡       /__/\__/  \    ✦  
+⭒  |" || "|  |  
+..--"``"`""))""`"`""`--..</pre>
+                        <p>hi! you've found 404heaven.</p>
+                        <p>Everything you see here lives</p>
+                        <p>somewhere inside my head.</p>
+                        <p>This website is simply a way</p>
+                        <p>to share it. Make yourself at home.</p>
+                        <p class="heart" aria-hidden="true">♡</p>
+                    </div>
+                </article>
+
+                <article class="window music">
+                    <div class="win__bar">
+                        <span class="icon" aria-hidden="true">♫</span>
+                        <span class="title">now playing</span>
+                        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+                    </div>
+                    <div class="win__body">
+                        <div class="np-top">
+                            <!-- becomes the real youtube player when CONFIG.playlistId is set -->
+                            <div class="np-video" id="np-frame">
+                                <span>set playlist id<br>in js/main.js</span>
+                            </div>
+                            <div class="np-meta">
+                                <p class="np-title" id="np-title">Portishead</p>
+                                <p class="np-album" id="np-album">Dummy (1994)</p>
+                                <p class="np-track" id="np-track">01. Mysterons</p>
+                                <p class="np-time"  id="np-time">1:23 / 5:06</p>
+                            </div>
+                        </div>
+                        <div class="np-bottom">
+                            <hr class="dotrule">
+                            <div class="np-controls">
+                                <button id="np-prev" aria-label="previous track">◀◀</button>
+                                <button id="np-play" aria-label="play or pause">▮▮</button>
+                                <button id="np-next" aria-label="next track">▶▶</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="window brain">
+                    <div class="win__bar">
+                        <span class="icon" aria-hidden="true">✺</span>
+                        <span class="title">current brainworm</span>
+                        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+                    </div>
+                    <div class="win__body">
+                        <pre class="ascii" aria-hidden="true">_
+_ (`-`) _
+/` '.\ /.' `\
+``'-.,=,.-'``
+.'//v\\'.
+(_/\ " /\_)
+'-'</pre>
+                        <p class="bw-name">Cyanotype</p>
+                        <p class="bw-note">Getting a kit soon</p>
+                        <p class="bw-since">since: 2026-07</p>
+                    </div>
+                </article>
+
+            </section>
+
+            <!-- FILA 2 -->
+
+            <section class="row">
+
+                <article class="window memory" id="latest-memory">
+                    <div class="win__bar">
+                        <span class="icon" aria-hidden="true">▣</span>
+                        <span class="title">latest memory</span>
+                        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+                    </div>
+                    <div class="win__body">
+                        <div class="mem-photo">
+                            <img class="dither" src="img/memories/memory1.jpg" alt="evening walk">
+                        </div>
+                        <p class="mem-caption">evening walk</p>
+                        <p class="mem-date">2026-07-15</p>
+                    </div>
+                </article>
+
+                <article class="window journal">
+                    <div class="win__bar">
+                        <span class="icon" aria-hidden="true">✎</span>
+                        <span class="title">latest journal entry</span>
+                        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+                    </div>
+                    <div class="win__body">
+                        <p class="jp-title" id="hj-title">slow days</p>
+                        <p class="jp-date"  id="hj-date">2026-07-17</p>
+                        <hr class="dotrule">
+                        <div class="jp-scroll">
+                            <div class="jp-body" id="hj-body">
+                                <p>today was one of those slow, quiet days i didn't plan. i soldered a bit, read a few pages, and watched the rain from my window.</p>
+                                <p>these are the days that remind me to breathe.</p>
+                            </div>
+                        </div>
+                        <a class="blink" href="journal.html">[ read more → ]</a>
+                    </div>
+                </article>
+
+                <article class="window bug" id="latest-bug">
+                    <div class="win__bar">
+                        <span class="icon" aria-hidden="true">❖</span>
+                        <span class="title">bug of the month</span>
+                        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+                    </div>
+                    <div class="win__body">
+                        <a href="bug.html" class="bug-link" aria-label="bug of the month: giraffe weevil — see more">
+                            <div class="bug-photo">
+                                <img class="dither" src="img/bug/bug1.jpg" alt="giraffe weevil on a leaf: long black neck, bright red elytra">
+                            </div>
+                            <p class="bug-name">
+                                <span class="bug-common">Giraffe Weevil</span><span class="bug-star" aria-hidden="true">✦</span><span class="bug-species">Trachelophorus giraffa</span>
+                            </p>
+                        </a>
+                    </div>
+                </article>
+
+            </section>
+
+            <!-- LINKS -->
+
+            <section class="window links">
+                <div class="win__bar">
+                    <span class="icon" aria-hidden="true">✉</span>
+                    <span class="title">links i like</span>
+                    <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
+                </div>
+                <div class="win__body">
+                    <div class="linkrow">
+                        <a class="linkbtn" href="https://archive.org" target="_blank" rel="noopener"><span class="ico">🏛</span> internet<br>archive</a>
+                        <a class="linkbtn" href="https://neocities.org" target="_blank" rel="noopener"><span class="ico">🐱</span> neocities</a>
+                        <a class="linkbtn linkbtn--lit" href="https://wiby.me" target="_blank" rel="noopener"><span class="ico">☾</span> lazy web</a>
+                        <a class="linkbtn" href="https://neal.fun" target="_blank" rel="noopener"><span class="ico">🌐</span> cool<br>websites</a>
+                        <a class="linkbtn" href="https://www.cameronsworld.net" target="_blank" rel="noopener">worldofos</a>
+                        <a class="linkbtn" href="https://wiby.me/surprise/" target="_blank" rel="noopener"><span class="ico">🌐</span> dan's old<br>skool stuff</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+
+            <footer class="footer">
+                <div class="fcol stars" aria-hidden="true">☆ · · · · · · · · · ☆</div>
+                <div class="fcol">
+                    <span>last updated:<br><span id="last-updated">july 18, 2026</span></span>
+                </div>
+                <div class="fcol">
+                    <pre class="ascii robot" aria-hidden="true"> [o_o]
+ /|=|\
+  d b</pre>
+                    <span>made with tea<br>and bad decisions</span>
+                </div>
+                <div class="fcol vsep" aria-hidden="true">⋮</div>
+                <div class="fcol">
+                    <a href="feed.xml">⛆ rss</a>
+                    <a href="feed.xml">🗎 xml</a>
+                </div>
+            </footer>
+
+        </main>
+
+    </div>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true"><img alt=""></div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

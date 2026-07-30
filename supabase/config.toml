@@ -1,0 +1,7 @@
+project_id = "pzjlbkrezhahaougowyw"
+
+[functions.imagekit-auth]
+# La verificación de usuario se hace dentro de la función (secret REQUIRE_USER),
+# no en la puerta de la plataforma. Así el endpoint se puede probar con curl y
+# endurecer después sin volver a desplegar con flags distintos.
+verify_jwt = false

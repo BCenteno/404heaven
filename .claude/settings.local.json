@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(node --check js/main.js)",
+      "Bash(curl -s -w '\\\\nHTTP %{http_code}\\\\n' 'https://pzjlbkrezhahaougowyw.supabase.co/rest/v1/photos?select=*&section=eq.memories&order=taken_at.desc' -H 'apikey: __TRACKED_VAR__' -H 'Authorization: Bearer __TRACKED_VAR__')",
+      "Bash(curl -s -o /dev/null -D - -w 'HTTP %{http_code} | type=%{content_type} | bytes=%{size_download}\\\\n' https://ik.imagekit.io/404heaven/memories/20211128_195340.jpg?tr=w-480 -H 'Origin: http://localhost:5500')",
+      "Bash(curl -s https://pzjlbkrezhahaougowyw.supabase.co/rest/v1/photos?select=id,section,image_path,taken_at -H 'apikey: sb_publishable_Xk3NbMoMvCGKs7TY_40rHg_JCV0MuBW' -H 'Authorization: Bearer sb_publishable_Xk3NbMoMvCGKs7TY_40rHg_JCV0MuBW')",
+      "Bash(python -c ' *)",
+      "Bash(python -m http.server 5599 --bind 127.0.0.1)",
+      "Bash(curl -s -o /dev/null -w \"server: HTTP %{http_code}\\\\n\" http://127.0.0.1:5599/memories.html)",
+      "Bash(\"/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe\" --headless=new --disable-gpu --no-sandbox --hide-scrollbars --virtual-time-budget=8000 --window-size=1400,1000 --screenshot=mem.png \"http://127.0.0.1:5599/memories.html\")",
+      "Bash('/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe' --headless=new --disable-gpu --no-sandbox --hide-scrollbars --virtual-time-budget=8000 --window-size=1400,1000 --user-data-dir=C:/Users/Usuario/AppData/Local/Temp/claude/edgeprof --screenshot=C:/Users/Usuario/AppData/Local/Temp/claude/c--Users-Usuario-Desktop-404heaven/ffecc6a4-da9c-4ad9-b89d-f3ab8f58f454/scratchpad/mem.png http://127.0.0.1:5599/memories.html)",
+      "Bash('/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe' --headless=new --disable-gpu --no-sandbox --hide-scrollbars --virtual-time-budget=8000 --window-size=1400,1600 --user-data-dir=C:/Users/Usuario/AppData/Local/Temp/claude/edgeprof --screenshot=C:/Users/Usuario/AppData/Local/Temp/claude/c--Users-Usuario-Desktop-404heaven/ffecc6a4-da9c-4ad9-b89d-f3ab8f58f454/scratchpad/home.png http://127.0.0.1:5599/index.html)",
+      "Bash(python -)",
+      "Bash(\"/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe\" --headless=new --disable-gpu --no-sandbox --virtual-time-budget=9000 --window-size=1500,1400 --user-data-dir=\"C:/Users/Usuario/AppData/Local/Temp/claude/edgeprof3\" --dump-dom \"http://127.0.0.1:5599/__probe2.html\")",
+      "Bash(rm -f gb480.jpg)",
+      "Bash(taskkill //F //FI \"WINDOWTITLE eq *http.server*\" //T)",
+      "Bash(curl -s https://pzjlbkrezhahaougowyw.supabase.co/rest/v1/photos?select=* -H 'apikey: sb_publishable_Xk3NbMoMvCGKs7TY_40rHg_JCV0MuBW' -H 'Authorization: Bearer sb_publishable_Xk3NbMoMvCGKs7TY_40rHg_JCV0MuBW')",
+      "Bash(curl -s https://pzjlbkrezhahaougowyw.supabase.co/rest/v1/ -H 'apikey: sb_publishable_Xk3NbMoMvCGKs7TY_40rHg_JCV0MuBW' -H 'Authorization: Bearer sb_publishable_Xk3NbMoMvCGKs7TY_40rHg_JCV0MuBW')",
+      "Bash(curl -s -w ' HTTP %{http_code}\\\\n' 'https://pzjlbkrezhahaougowyw.supabase.co/rest/v1/photos?select=*&section=eq.bug&order=taken_at.desc' -H 'apikey: __TRACKED_VAR__' -H 'Authorization: Bearer __TRACKED_VAR__')",
+      "Bash(\"/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe\" --headless=new --disable-gpu --no-sandbox --virtual-time-budget=9000 --window-size=1500,1000 --user-data-dir=\"C:/Users/Usuario/AppData/Local/Temp/claude/edgeD\" --dump-dom \"http://127.0.0.1:5599/__probeC.html\")",
+      "Bash(curl -s -w '\\\\nHTTP %{http_code}\\\\n' -X POST https://pzjlbkrezhahaougowyw.supabase.co/functions/v1/imagekit-auth)"
+    ]
+  }
+}
