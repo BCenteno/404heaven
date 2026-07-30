@@ -81,12 +81,19 @@ const CONFIG = {
 /* ================= guestbook (supabase) =================
    Tabla "guestbook": id, created_at, name, message. Solo se usan
    name y message; id y created_at los pone la base.
-   Las entradas de ejemplo del HTML se quedan si supabase no contesta,
-   así la página nunca se ve rota. */
+   El HTML no trae firmas de ejemplo: arranca con un <p class="feed-status">
+   que dice "loading…" y que se reemplaza al contestar supabase, o cuenta
+   qué pasó si la lectura falla. */
 const guestbookReady = (function guestbook() {
   // en la home las entradas viven dentro del track del marquee
   const list = document.getElementById("gb-track") || document.getElementById("gb-entries");
   if (!list) return Promise.resolve();
+
+  // el <p class="feed-status"> del HTML, mientras siga puesto
+  const say = (msg) => {
+    const status = list.querySelector(".feed-status");
+    if (status) status.textContent = msg;
+  };
 
   const base = (CONFIG.supabaseUrl || "").replace(/\/+$/, "");
   const key = CONFIG.supabaseKey || "";
@@ -140,12 +147,16 @@ const guestbookReady = (function guestbook() {
   )
     .then((res) => (res.ok ? res.json() : fail(res)))
     .then((rows) => {
-      // solo pisamos las entradas de ejemplo cuando supabase sí contestó
-      list.innerHTML = "";
+      if (!rows.length) {
+        say("no signatures yet — be the first!");
+        return;
+      }
+      list.innerHTML = ""; // se va el "loading…"
       rows.forEach((row) => list.appendChild(render(row)));
     })
     .catch((err) => {
       console.error("[guestbook] no se pudieron leer las entradas:", err.message);
+      say("couldn't load the guestbook");
     });
 
   // el widget de la home solo muestra; firmar es cosa de guestbook.html
@@ -175,6 +186,8 @@ const guestbookReady = (function guestbook() {
       .then((res) => (res.ok ? res.json() : fail(res)))
       .then((rows) => {
         const row = (Array.isArray(rows) ? rows[0] : rows) || { name, message };
+        const status = list.querySelector(".feed-status");
+        if (status) status.remove(); // era la primera firma: se va el aviso
         list.prepend(render(row)); // la nueva entrada arriba del todo
         form.reset();
         if (button) { button.disabled = false; button.textContent = label; }
@@ -520,8 +533,9 @@ let applyDither = function () {}; // lo reemplaza el bloque de abajo
       if (!canvas.isConnected) wrap.appendChild(canvas);
       ditherInto(img, canvas);
     };
-    // el listener se queda para siempre: si alguien cambia el src (el widget
-    // "latest memory" reemplaza su foto de respaldo) el dither se rehace solo
+    // el listener se queda para siempre: los widgets de la home arrancan con
+    // la <img> vacía y le ponen el src al llegar supabase, y ahí el dither se
+    // dispara solo. Si el src cambia otra vez, se rehace igual.
     img.addEventListener("load", run);
     if (img.complete && img.naturalWidth) run();
     // si la imagen no carga, el canvas vacío taparía el hueco: fuera
@@ -740,9 +754,9 @@ const PHOTOS = (function photosApi() {
   }
 
   // widget "latest memory" de la home: la última foto SUBIDA (created_at),
-  // no la más reciente tomada. La tarjeta ya existe en el HTML con una foto
-  // de respaldo: acá solo se le cambia el contenido, así que si supabase no
-  // contesta la home se ve igual que siempre.
+  // no la más reciente tomada. La tarjeta existe en el HTML vacía (sin src ni
+  // textos): acá se le pone el contenido. Si supabase no contesta queda el
+  // recuadro vacío, que es lo honesto — no hay copia local de las fotos.
   function fillLatest() {
     const img = widget.querySelector("img.dither");
     const caption = widget.querySelector(".mem-caption");
@@ -753,7 +767,7 @@ const PHOTOS = (function photosApi() {
       .then((rows) => {
         const row = rows[0];
         if (!row || !row.image_path) {
-          console.warn("[photos] no hay fotos en memories: queda la del HTML");
+          console.warn("[photos] no hay fotos en memories: el widget queda vacío");
           return;
         }
         // crossOrigin ANTES que src, si no el canvas del dither queda tainted.
@@ -927,9 +941,9 @@ const PHOTOS = (function photosApi() {
     return sec;
   }
 
-  // widget "bug of the month" de la home. La ficha ya existe en el HTML con
-  // un bicho de respaldo: acá solo se le cambia el contenido, así que si
-  // supabase no contesta la home se ve igual que siempre.
+  // widget "bug of the month" de la home. La ficha existe en el HTML vacía:
+  // acá se le pone el contenido. Si supabase no contesta queda el recuadro
+  // vacío — las fotos viven en imagekit, no hay copia local.
   function fillWidget() {
     const img = widget.querySelector("img.dither");
     const common = widget.querySelector(".bug-common");
@@ -943,7 +957,7 @@ const PHOTOS = (function photosApi() {
         // que subiste. Es la misma regla con la que abre el carrete.
         const row = rows.find((r) => r.is_featured) || rows[0];
         if (!row || !row.image_path) {
-          console.warn("[bug] no hay bichos con foto: queda el del HTML");
+          console.warn("[bug] no hay bichos con foto: el widget queda vacío");
           return;
         }
         // crossOrigin ANTES que src: al cambiarlo salta el 'load' y el

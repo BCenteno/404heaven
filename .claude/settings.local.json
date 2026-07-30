@@ -22,7 +22,25 @@
       "Bash(\"/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe\" --headless=new --disable-gpu --no-sandbox --virtual-time-budget=9000 --window-size=1500,1000 --user-data-dir=\"C:/Users/Usuario/AppData/Local/Temp/claude/edgeD\" --dump-dom \"http://127.0.0.1:5599/__probeC.html\")",
       "Bash(curl -s -w '\\\\nHTTP %{http_code}\\\\n' -X POST https://pzjlbkrezhahaougowyw.supabase.co/functions/v1/imagekit-auth)",
       "Bash(ls \"/c/Program Files/Google/Chrome/Application/chrome.exe\" \"/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe\" 2>/dev/null)",
-      "Read(//c/Program Files/Google/Chrome/Application/**)"
+      "Read(//c/Program Files/Google/Chrome/Application/**)",
+      "Bash(npm view *)",
+      "Bash(npm --version)",
+      "Bash(npx --yes async-neocities@latest --help)",
+      "Bash(cd \"/c/Users/Usuario/AppData/Local/npm-cache/_npx/54bd96a9c13e4522/node_modules/async-neocities\" && ls && echo \"=== bin.js ===\" && wc -l bin.js && grep -n -i \"keychain\\\\|credential\\\\|homedir\\\\|\\\\.config\\\\|writeFile\\\\|token\\\\|API_KEY\\\\|setPassword\\\\|keytar\" bin.js | head -40)",
+      "Read(//c/Users/Usuario/AppData/Local/npm-cache/_npx/54bd96a9c13e4522/node_modules/async-neocities/**)",
+      "Bash(cd \"/c/Users/Usuario/AppData/Local/npm-cache/_npx/54bd96a9c13e4522/node_modules/async-neocities\" && sed -n '225,275p' bin.js && echo \"=== KEY STORAGE HELPERS ===\" && grep -rn \"keytar\\\\|credentials\\\\|secret\" package.json lib/*.js 2>/dev/null | head -20)",
+      "Bash(node -e \"const p=require\\('./package.json'\\);console.log\\(p.dependencies\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(cd \"/c/Users/Usuario/AppData/Local/npm-cache/_npx/54bd96a9c13e4522/node_modules/async-neocities\" && sed -n '195,225p' bin.js && echo \"=== PREVIEW/DEPLOY ===\" && sed -n '268,300p' bin.js)",
+      "Bash(cd \"/c/Users/Usuario/AppData/Local/npm-cache/_npx/54bd96a9c13e4522/node_modules/async-neocities\" && grep -rn \"dotfiles\\\\|shaFile\\\\|folderWalker\\\\|ignore\\\\|skip\" lib/folder-diff.js index.js 2>/dev/null | head -20)",
+      "Bash(grep -rn \"supabase/\\\\|\\\\.\\\\./\\\\|feed.xml\\\\|img/\" --include=*.html --include=*.css .)",
+      "Bash(npm install *)",
+      "Bash(async-neocities --help)",
+      "Bash(grep -v \"^\\\\.$\\\\|^\\\\.\\\\.$\\\\|^public$\")",
+      "Bash(sed 's|^|  |')",
+      "Read(//c/Users/Usuario/AppData/Local/**)",
+      "Bash(python \"C:/Users/Usuario/AppData/Local/Temp/claude/c--Users-Usuario-Desktop-404heaven/94a9d9aa-ddde-4a82-8e6b-933dddc917a1/scratchpad/audit.py\")",
+      "Bash(python \"C:/Users/Usuario/AppData/Local/Temp/claude/c--Users-Usuario-Desktop-404heaven/94a9d9aa-ddde-4a82-8e6b-933dddc917a1/scratchpad/audit2.py\")"
     ]
   }
 }

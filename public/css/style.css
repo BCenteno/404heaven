@@ -485,6 +485,9 @@ img{ max-width:100%; display:block; }
 .bug-name .bug-common,
 .bug-name .bug-species{ display:inline; margin:0; font-size:.8125rem; }
 .bug-name .bug-star{ color:var(--vio-soft); margin:0 .4375rem; }
+/* mientras supabase no conteste los nombres están vacíos: el separador
+   no tiene que quedar colgado solo en el medio de la nada */
+.bug-name:has(.bug-common:empty) .bug-star{ display:none; }
 
 /* =======================================================
    JOURNAL widget
@@ -580,7 +583,6 @@ img{ max-width:100%; display:block; }
 .footer .fcol{ display:flex; align-items:center; gap:.75rem; }
 .footer .stars{ color:var(--vio-faint); letter-spacing:.1875rem; }
 .footer .robot{ font-size:.625rem; color:var(--vio-soft); }
-.footer .vsep{ color:var(--border-dim); }
 .footer a{ color:var(--vio); }
 .footer a:hover{ color:var(--white); }
 
@@ -785,18 +787,9 @@ body:has(.page){ display:block; padding:0; }
 }
 .col-icon .png img{ width:100%; height:100%; object-fit:contain; }
 
-.site-footer{
-    max-width:77.5rem;
-    margin:0 auto;
-    padding:.75rem 1.125rem 1.625rem;
-    display:flex; flex-wrap:wrap;
-    align-items:center; justify-content:space-between;
-    gap:.875rem;
-    color:var(--vio-soft);
-    font-size:.75rem;
-}
-.site-footer a{ color:var(--vio); }
-.site-footer a:hover{ color:var(--white); }
+/* estado de los feeds que llena el JS: "loading…" mientras carga,
+   o el motivo si algo falló. Lo usan memories, art, bug y guestbook. */
+.feed-status{ color:var(--vio-faint); font-size:.75rem; text-align:center; padding:.5rem 0; }
 
 /* =======================================================
    UNDER CONSTRUCTION

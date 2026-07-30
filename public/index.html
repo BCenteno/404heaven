@@ -109,23 +109,10 @@
                     <p class="gb-head">sign my guestbook!</p>
                     <div class="gb-book ascii" aria-hidden="true">. ݁₊ ⊹ . ݁ ⟡ ݁ . ⊹ ₊ ݁.</div>
 
+                    <!-- las firmas las trae guestbook() desde supabase -->
                     <div class="gb-entries" id="gb-entries">
                         <div class="gb-track" id="gb-track">
-                            <div class="gb-entry">
-                                <p class="who">luna</p>
-                                <p class="msg">love your site!!</p>
-                                <p class="when">– 2026-07-18</p>
-                            </div>
-                            <div class="gb-entry">
-                                <p class="who">pixelghost</p>
-                                <p class="msg">such a cozy place</p>
-                                <p class="when">– 2026-07-17</p>
-                            </div>
-                            <div class="gb-entry">
-                                <p class="who">mothlover</p>
-                                <p class="msg">the bug of the month is amazing :)</p>
-                                <p class="when">– 2026-07-16</p>
-                            </div>
+                            <p class="feed-status">loading…</p>
                         </div>
                     </div>
 
@@ -276,12 +263,13 @@ _ (`-`) _
                         <span class="title">latest memory</span>
                         <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
                     </div>
+                    <!-- vacío a propósito: lo llena fillLatest() desde supabase -->
                     <div class="win__body">
                         <div class="mem-photo">
-                            <img class="dither" src="img/memories/memory1.jpg" alt="evening walk">
+                            <img class="dither" alt="">
                         </div>
-                        <p class="mem-caption">evening walk</p>
-                        <p class="mem-date">2026-07-15</p>
+                        <p class="mem-caption"></p>
+                        <p class="mem-date"></p>
                     </div>
                 </article>
 
@@ -328,13 +316,14 @@ _ (`-`) _
                         <span class="title">bug of the month</span>
                         <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
                     </div>
+                    <!-- vacío a propósito: lo llena fillWidget() desde supabase -->
                     <div class="win__body">
-                        <a href="bug.html" class="bug-link" aria-label="bug of the month: giraffe weevil — see more">
+                        <a href="bug.html" class="bug-link" aria-label="bug of the month — see more">
                             <div class="bug-photo">
-                                <img class="dither" src="img/bug/bug1.jpg" alt="giraffe weevil on a leaf: long black neck, bright red elytra">
+                                <img class="dither" alt="">
                             </div>
                             <p class="bug-name">
-                                <span class="bug-common">Giraffe Weevil</span><span class="bug-star" aria-hidden="true">✦</span><span class="bug-species">Trachelophorus giraffa</span>
+                                <span class="bug-common"></span><span class="bug-star" aria-hidden="true">✦</span><span class="bug-species"></span>
                             </p>
                         </a>
                     </div>
@@ -385,11 +374,6 @@ _ (`-`) _
  /|=|\
   d b</pre>
                     <span>made with tea<br>and bad decisions</span>
-                </div>
-                <div class="fcol vsep" aria-hidden="true">⋮</div>
-                <div class="fcol">
-                    <a href="feed.xml">⛆ rss</a>
-                    <a href="feed.xml">🗎 xml</a>
                 </div>
             </footer>
 

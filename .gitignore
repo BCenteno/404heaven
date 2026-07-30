@@ -1,0 +1,29 @@
+# ---------------------------------------------------------
+# 404heaven — qué NO entra al repo
+# Nota: lo que se PUBLICA en neocities no lo decide este
+# archivo, lo decide la carpeta public/ (ver DEPLOY.md).
+# ---------------------------------------------------------
+
+# secretos y entorno — nunca, en ninguna forma
+.env
+.env.*
+*.key
+*.pem
+
+# la API key de neocities NO vive en el repo (queda en
+# %LOCALAPPDATA%\async-neocities\config.json), pero por si
+# alguna vez se exporta a un archivo local:
+.neocities
+neocities.key
+
+# node
+node_modules/
+
+# supabase local
+supabase/.temp/
+supabase/.branches/
+
+# sistema / editor
+Thumbs.db
+desktop.ini
+.DS_Store
