@@ -18,7 +18,7 @@
 ======================================================= */
 
 :root{
-    --bg:        #040007;
+    --bg:        #030005;
     --panel:     #0a0210;
     --panel-2:   #140627;
     --titlebar:  #1d0834;
@@ -59,12 +59,15 @@ html:has(.layout){ font-size:clamp(9px, min(1vw, 1.78vh), 20px); }
    PAGE
 ======================================================= */
 
+/* el fondo vive solo en `html`: así se propaga al lienzo y el cielo de
+   estrellas (z-index:-1, hijo de body) queda por encima de él y por debajo
+   del contenido. Si `body` también lo pintara, taparía las estrellas. */
 html,
 body{
     width:100%;
-    background:var(--bg);
     font-family:var(--font);
 }
+html{ background:var(--bg); }
 
 /* Solo HOME se ancla al viewport: es la única página que no scrollea.
    El resto crece y scrollea normal. Ojo: el overflow del elemento raíz
@@ -81,10 +84,47 @@ body{
     justify-content:center;
     align-items:center;
     padding:2.1875rem;
-    background:var(--bg);
     color:var(--vio);
     font-size:.8125rem;
     line-height:1.5;
+}
+
+/* =======================================================
+   STARFIELD — el cielo de fondo
+   Capa fija detrás de todo. El JS la llena con glifos en
+   posiciones al azar (rejilla con jitter, para que caigan
+   repartidos y no en grumos) y cada estrella tintinea a su
+   propio ritmo: --dur, --delay, --dim y --lit los pone el JS.
+======================================================= */
+
+.starfield{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    overflow:hidden;
+    pointer-events:none;
+    user-select:none;
+    contain:layout paint style;
+}
+
+.starfield .star{
+    position:absolute;
+    color:var(--vio-faint);
+    font-size:var(--size,.75rem);
+    line-height:1;
+    opacity:var(--dim,.4);
+    animation:star-twinkle var(--dur,4s) ease-in-out var(--delay,0s) infinite;
+}
+
+/* las más grandes brillan un poco, como la luna del header */
+.starfield .star--big{
+    color:var(--vio-soft);
+    text-shadow:0 0 .5rem rgba(150,90,240,.45);
+}
+
+@keyframes star-twinkle{
+    0%,100%{ opacity:var(--dim,.4);  transform:scale(1);    }
+    50%    { opacity:var(--lit,.95); transform:scale(1.25); }
 }
 
 a{ color:var(--vio); text-decoration:none; }
@@ -288,7 +328,23 @@ img{ max-width:100%; display:block; }
    SIDEBAR — nav
 ======================================================= */
 
-.nav-list{ list-style:none; padding:.3125rem 0; overflow:hidden; }
+/* esta ventana no trae .win__body: la lista es el cuerpo. Por eso se
+   estira ella misma para ocupar el alto que sobra y centra los enlaces
+   ahí adentro. En las páginas internas la ventana mide lo que mide la
+   lista, así que el flex:1 no cambia nada. */
+.nav-list{
+    list-style:none;
+    padding:.3125rem 0;
+    overflow:hidden;
+    flex:1;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+/* sin esto, cuando la ventana queda corta los enlaces se aplastan y se
+   les corta el texto por dentro; preferimos que sobresalgan y listo */
+.nav-list li{ flex-shrink:0; }
 .nav-list a{
     display:flex;
     align-items:center;
@@ -629,15 +685,21 @@ img{ max-width:100%; display:block; }
 .best .win__body{ font-size:.78rem; display:block; }
 .best p{ margin:.1875rem 0; }
 .best p::before{ content:"> "; color:var(--vio-faint); }
-.best .ascii{ margin:.625rem auto 0; text-align:center; font-size:.6875rem; display:block; width:fit-content; }
 
-.ws-star{
-    position:absolute;
-    color:var(--vio-faint);
-    user-select:none;
-    animation:twinkle 4s ease-in-out infinite;
+/* la tele vive fuera de la ventana, debajo. width:fit-content + margin
+   auto centra el bloque entero sin tocar el interior del dibujo, que se
+   alinea solo con sus propios espacios. */
+.ws-art{
+    display:block;
+    width:fit-content;
+    margin:.75rem auto 0;
+    font-size:.6875rem;
 }
-@keyframes twinkle{ 50%{ opacity:.25; } }
+
+/* La puerta es un panel opaco (background:var(--bg)) por encima del cielo
+   de fondo, así que el JS le mete su propia .starfield dentro. Funciona
+   porque .welcome-screen crea contexto de apilado (fixed + z-index): el
+   z-index:-1 de la capa queda sobre su fondo y bajo .ws-inner. */
 
 /* =======================================================
    LIGHTBOX + DITHER
@@ -870,7 +932,7 @@ body:has(.page){ display:block; padding:0; }
 }
 
 @media (prefers-reduced-motion:reduce){
-    .ws-star,.gb-track.is-scrolling,.uc-title{ animation:none; }
+    .gb-track.is-scrolling,.uc-title,.starfield .star{ animation:none; }
     .welcome-screen,.dither-wrap canvas,.col-icon{ transition:none; }
 }
 

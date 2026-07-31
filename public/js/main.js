@@ -17,9 +17,10 @@ const CONFIG = {
   // e.g. "https://myblog.blogspot.com". leave "" to keep manual entries.
   blogspotUrl: "",
 
-  // visitor counter starting number (until you plug a real counter
-  // service — see notes in the counter section below)
-  counterBase: 421, // shows as 000421
+  // contador de visitas — vive en supabase, arranca en 0.
+  //   "unique" = suma una vez por navegador (el número es "sos la visita nº X")
+  //   "visits" = suma una vez por sesión (si vuelve mañana, cuenta de nuevo)
+  counterMode: "unique",
 
   // guestbook — supabase project.
   // supabaseUrl es la URL BASE del proyecto (sin /rest/v1/ al final):
@@ -58,24 +59,78 @@ const CONFIG = {
 })();
 
 /* ================= visitor counter =================
-   To make it truly shared, create a free goatcounter.com account and
-   replace the localStorage logic with:
-     fetch("https://YOURCODE.goatcounter.com/counter//.json")
-       .then(r => r.json()).then(d => render(d.count_unique));
-   Until then: a local count so the widget is alive out of the box. */
+   Cuenta de verdad: el número vive en supabase (tabla "counters", fila
+   'visits') y es el mismo para todo el mundo. El SQL que crea la tabla y
+   la función está en supabase/sql/counter.sql.
+
+   La suma no se hace con un UPDATE desde el navegador — eso obligaría a
+   dar permiso de escritura a cualquiera. Se llama a bump_visits(), una
+   función SECURITY DEFINER que solo sabe hacer +1 y devolver el total.
+
+   Cada navegador suma una sola vez (ver CONFIG.counterMode) y se guarda
+   el número que le tocó, así al volver ve el suyo y no infla la cuenta
+   recargando la página. */
 (function visitorCounter() {
   const el = document.getElementById("visitor-counter");
   if (!el) return;
 
-  const KEY = "heaven404_visits";
-  let count = CONFIG.counterBase;
-  try {
-    const stored = parseInt(localStorage.getItem(KEY), 10);
-    count = isNaN(stored) ? CONFIG.counterBase : stored + 1;
-    localStorage.setItem(KEY, String(count));
-  } catch (e) {}
+  const MINE = "heaven404_visitor_no";  // el número que me tocó
+  const SEEN = "heaven404_counted";     // ya conté en esta sesión
 
-  el.textContent = String(count).padStart(6, "0");
+  const show = (n) => { el.textContent = String(n).padStart(6, "0"); };
+  const readInt = (store, k) => {
+    try { return parseInt(store.getItem(k), 10); } catch (e) { return NaN; }
+  };
+
+  const mine = readInt(localStorage, MINE);
+  if (!isNaN(mine)) show(mine); // algo honesto en pantalla mientras responde la red
+
+  const base = (CONFIG.supabaseUrl || "").replace(/\/+$/, "");
+  const key = CONFIG.supabaseKey || "";
+  if (!base || !key) {
+    console.warn("[counter] falta supabaseUrl o supabaseKey en CONFIG (js/main.js)");
+    return;
+  }
+
+  // ¿a esta persona ya la contamos?
+  let counted = !isNaN(mine);
+  if (CONFIG.counterMode === "visits") {
+    try { counted = !!sessionStorage.getItem(SEEN); } catch (e) { counted = false; }
+  }
+  if (counted) return;
+
+  fetch(base + "/rest/v1/rpc/bump_visits", {
+    method: "POST",
+    headers: {
+      apikey: key,
+      Authorization: "Bearer " + key,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: "{}",
+  })
+    .then((res) => {
+      if (res.ok) return res.json();
+      return res.text().then((body) => {
+        throw new Error("HTTP " + res.status + " — " + (body || res.statusText));
+      });
+    })
+    .then((data) => {
+      // postgrest devuelve el escalar pelado (42), pero según la versión
+      // puede venir envuelto en array o en objeto: aceptamos las tres
+      const row = Array.isArray(data) ? data[0] : data;
+      const n = Number(row && typeof row === "object" ? Object.values(row)[0] : row);
+      if (!isFinite(n)) throw new Error("respuesta inesperada: " + JSON.stringify(data));
+
+      show(n);
+      try {
+        localStorage.setItem(MINE, String(n));
+        sessionStorage.setItem(SEEN, "1");
+      } catch (e) {}
+    })
+    .catch((err) => {
+      console.error("[counter] no se pudo sumar la visita:", err.message);
+    });
 })();
 
 /* ================= guestbook (supabase) =================
@@ -1016,6 +1071,123 @@ const PHOTOS = (function photosApi() {
       console.error("[bug] no se pudieron leer los bichos:", err.message);
       say("couldn't load bugs — check the console");
     });
+})();
+
+/* ================= starfield =================
+   El cielo del fondo. Una capa fija (.starfield) que se llena de
+   glifos con posición, tamaño, brillo y ritmo al azar.
+
+   El reparto no es azar puro: se divide la pantalla en una rejilla y
+   cada celda tira su estrella en un punto cualquiera de adentro. Sale
+   igual de desordenado, pero sin los grumos y los claros enormes que
+   deja el random a secas. */
+(function starfield() {
+  // los chicos salen mucho, los grandes son la excepción
+  const GLYPHS = [
+    "·", "·", "·", "*", "*", "∗", "⋆", "⋆", "✦", "✧", "⁕", "⋇",
+    "★", "☆", "✭", "✮", "✯", "✰", "⭑", "⭒", "⟡", "✴", "⋈",
+  ];
+  const BIG = "★☆✭✮✯✰✴"; // los que llevan glow
+
+  const CELL = 110;   // px de lado de cada celda de la rejilla
+  const FILL = 0.68;  // probabilidad de que una celda tenga estrella
+  const MAX  = 220;   // techo, por si alguien abre esto en un monitor enorme
+
+  const rand = (min, max) => min + Math.random() * (max - min);
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+  const newLayer = (parent) => {
+    const el = document.createElement("div");
+    el.className = "starfield";
+    el.setAttribute("aria-hidden", "true");
+    parent.appendChild(el);
+    return el;
+  };
+
+  // el cielo de siempre, detrás de todo
+  let layers = [newLayer(document.body)];
+
+  // la puerta de entrada es un panel opaco por encima de ese cielo, así que
+  // lleva su propia copia: las mismas estrellas, en el mismo sitio y en el
+  // mismo punto del parpadeo, para que al desvanecerse no se note el cambio.
+  // (si el welcome no toca mostrarse, el módulo de arriba ya lo sacó del DOM)
+  const door = document.getElementById("welcome-screen");
+  if (door) layers.push(newLayer(door));
+
+  // una sola tirada de dados para todas las capas: si cada una sorteara lo
+  // suyo, al abrir la puerta el cielo saltaría de un dibujo a otro
+  function roll() {
+    const cols = Math.max(1, Math.round(window.innerWidth / CELL));
+    const rows = Math.max(1, Math.round(window.innerHeight / CELL));
+    const stars = [];
+
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        if (stars.length >= MAX || Math.random() > FILL) continue;
+
+        stars.push({
+          glyph: pick(GLYPHS),
+          // posición en % dentro de su celda: así el cielo aguanta un
+          // resize chico sin tener que volver a nacer
+          left: (((x + Math.random()) / cols) * 100).toFixed(2) + "%",
+          top:  (((y + Math.random()) / rows) * 100).toFixed(2) + "%",
+          size: rand(0.5, 1.15).toFixed(2) + "rem",
+          dim:  rand(0.08, 0.3).toFixed(2),
+          lit:  rand(0.55, 1).toFixed(2),
+          dur:  rand(2.4, 7.5).toFixed(2) + "s",
+          // delay negativo: cada una entra por un punto distinto del ciclo,
+          // así no parpadean todas a la vez
+          delay: "-" + rand(0, 7.5).toFixed(2) + "s",
+        });
+      }
+    }
+    return stars;
+  }
+
+  function paint(layer, stars) {
+    const frag = document.createDocumentFragment();
+
+    stars.forEach((s) => {
+      const star = document.createElement("span");
+      star.className = "star" + (BIG.includes(s.glyph) ? " star--big" : "");
+      star.textContent = s.glyph;
+      star.style.left = s.left;
+      star.style.top = s.top;
+      star.style.setProperty("--size", s.size);
+      star.style.setProperty("--dim", s.dim);
+      star.style.setProperty("--lit", s.lit);
+      star.style.setProperty("--dur", s.dur);
+      star.style.setProperty("--delay", s.delay);
+      frag.appendChild(star);
+    });
+
+    layer.innerHTML = "";
+    layer.appendChild(frag);
+  }
+
+  function build() {
+    // la capa del welcome se va con él cuando entrás; no la repintamos
+    layers = layers.filter((l) => l.isConnected);
+    const stars = roll();
+    layers.forEach((l) => paint(l, stars));
+  }
+
+  build();
+
+  // rehacer el cielo solo si la ventana cambió de verdad: en el móvil la
+  // barra del navegador dispara resizes de unos pocos px todo el tiempo
+  let last = { w: window.innerWidth, h: window.innerHeight };
+  let timer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      if (Math.abs(w - last.w) < 120 && Math.abs(h - last.h) < 120) return;
+      last = { w, h };
+      build();
+    }, 250);
+  });
 })();
 
 /* ================= small things ================= */

@@ -19,22 +19,22 @@
     <!-- ========================================= -->
 
     <div class="welcome-screen" id="welcome-screen" hidden>
-        <span class="ws-star" style="top:12%; left:16%;">✦</span>
-        <span class="ws-star" style="top:22%; right:20%; animation-delay:1.2s;">·</span>
-        <span class="ws-star" style="bottom:24%; left:24%; animation-delay:2s;">*</span>
-        <span class="ws-star" style="bottom:16%; right:14%; animation-delay:.6s;">✦</span>
+        <!-- las estrellas del fondo las pone el JS (starfield en main.js):
+             la misma tirada que la de la home, para que al entrar el cielo
+             se quede donde está en vez de cambiar de dibujo -->
 
         <div class="ws-inner">
             <pre class="logo-ascii" aria-label="404heaven">    ░█▓█     ▓▓███▒░      ░█▓█   ▒██░
-   ▒████░   ███░░▓██░    ▒████░  ░██▒ ▒░░     ░░▒░░     ░░▒░▒     ░     ░ ░   ░░▒░░     ░  ░▒░░
-  ▒█░▓██   ▒██░  ░██▒   ▒█░▒██   ▒██▓█▓██▓   ▒▓█▓███▒  ░▓█▓███▓░ ▒██░  ░██░  ███▓██▓   ███▓████░
-░▓█░ ▒██░  ▒██▒   ███ ░▓█░ ▒██░  ▒██▓  ▒██░ ▒██▓▒░▓██▒  ▒▒▓▒███▒  ███  ▓██  ███░▒░███  ███░ ░██▓
-▓█▓▓▒███▒▒ ▒██░  ░██▒ ▒█▓▒▒███▓▒ ▒██░  ▒██  ▒██▓▒▓▒▓▒▒ ▓██▒▒▒██▓   ██▒░██░ ░██▓▓▒▓▒▓▒  ███   ███
-▒▒▓▓▓▓██▓▒  ███░░▓██░ ▒▒▓▒▓████▒ ░██▒  ▒██░ ░██▓░ ░░▓  ███░ ▓██▓   ▒████▓   ▓██░░ ▒▒▒  ██▓   ██▓
-     ▓██     ▓▓███▒░       ▒██   ▒██░  ▒██   ░▒█████▒  ░▓███▒██▓    ▓███     ▒▓███▓▓░  ███   ███</pre>
+█▓▒   █▓▒  ▄▓█▀▓▄   █▓▒   █▓▒   █▓▒   █▓▒   ▄█▓▀▀▓▒▀ █▓▒▀▀▓▄   █▓▒   ░▄    ▄█▓▀▀▓▒▀ █▓▒▀▀▓▄  
+▓▒░   ▓▒░ ▐▓▒  ▐▒░▄ ▓▒░   ▓▒░   ▓▒░   ▓▒░  ▓▒░   ▀   ▓▒░  ▐▒▄  ▓▒░   ▒░█  ▓▒░   ▀   ▓▒░  ▐▒▄ 
+▀░█▄  ▒░█ ░▒░   ░██ ▀░█▄  ▒░█   ▒░█▄▄▄▒░█ ▐▒░█▄▄     ▒░█▄▄▄░█▌ ▒▒░   ░██ ▐▒░█▄▄     ▒░█   ░█▌
+   ▀▀█░██ █░█   ███    ▀▀█░██   ░██   ░██ ▐██▌    ▄  ░██   ███ ░░█   ███ ▐██▌    ▄  ░██   ███
+      ███ ▀██▄ ▄██▀       ███   ███   ███  ▀░█▄  ░██ ███   ███  ▀█▄ ▄█▀   ▀░█▄  ░██ ███   ███
+      █▀    ▀▀▀▀▀         █▀     ▀█   █▀     ▀▀▀▀▀▀▀  ▀█   █▀     ▀▀       ▀▀▀▀▀▀▀  ▀█   █▀ 
+            </pre>
 
-            <p class="ws-msg">you've reached 404heaven.</p>
-            <p class="ws-msg-2">a little corner of the internet where i keep pieces of my mind.<br>take your time.</p>
+            <p class="ws-msg">you've reached 404heaven</p>
+            <p class="ws-msg-2">The internet gave us places that geography never could<br>take your time</p>
 
             <button class="ws-enter" id="ws-enter">enter</button>
 
@@ -44,17 +44,27 @@
                     <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
                 </div>
                 <div class="win__body">
-                    <p>anything</p>
+                    <p>Desktop (works on mobile)</p>
                     <p>with curiosity</p>
                     <p>and low expectations</p>
-                    <pre class="ascii" aria-hidden="true"> ________
-| .----. |
-| | ^^ | |
-| '----' |
-|________|
- \_○__○_/</pre>
                 </div>
             </div>
+
+            <!-- la tele va suelta, debajo de la ventana -->
+            <pre class="ascii ws-art" aria-hidden="true">
+_   _
+ |*\_/*|________
+||_/-\_|______  |
+| |           | |
+| |   0   0   | |
+| |     3     | |
+| |___________| |
+|_______________|
+_|________|_
+/  *********  \
+/  ***********  \
+------------------
+            </pre>
         </div>
     </div>
 
@@ -94,7 +104,8 @@
                 </div>
                 <div class="win__body">
                     <p class="label">you are visitor #</p>
-                    <p class="digits" id="visitor-counter">000421</p>
+                    <!-- el número real lo trae visitorCounter() de supabase -->
+                    <p class="digits" id="visitor-counter">000000</p>
                     <p class="thanks">thank you for stopping by!</p>
                     <p class="ascii" aria-hidden="true">૮꒰ ˶• ༝ •˶꒱ა ♡</p>
                 </div>
@@ -123,7 +134,7 @@
             </div>
 
             <div class="copyright">
-                © 2026 Mandy<br>all rights reserved
+                © 2026 404heaven<br>all rights reserved
             </div>
 
         </aside>
@@ -145,13 +156,14 @@
                     <span class="sparkle" style="top:54px; right:24%;" aria-hidden="true">✧</span>
                     <span class="sparkle" style="top:6px;  right:32%;" aria-hidden="true">·</span>
                     <span class="moon" aria-hidden="true">☾</span>
-                    <pre class="logo-ascii" aria-label="404heaven">    ░█▓█     ▓▓███▒░      ░█▓█   ▒██░
-   ▒████░   ███░░▓██░    ▒████░  ░██▒ ▒░░     ░░▒░░     ░░▒░▒     ░     ░ ░   ░░▒░░     ░  ░▒░░
-  ▒█░▓██   ▒██░  ░██▒   ▒█░▒██   ▒██▓█▓██▓   ▒▓█▓███▒  ░▓█▓███▓░ ▒██░  ░██░  ███▓██▓   ███▓████░
-░▓█░ ▒██░  ▒██▒   ███ ░▓█░ ▒██░  ▒██▓  ▒██░ ▒██▓▒░▓██▒  ▒▒▓▒███▒  ███  ▓██  ███░▒░███  ███░ ░██▓
-▓█▓▓▒███▒▒ ▒██░  ░██▒ ▒█▓▒▒███▓▒ ▒██░  ▒██  ▒██▓▒▓▒▓▒▒ ▓██▒▒▒██▓   ██▒░██░ ░██▓▓▒▓▒▓▒  ███   ███
-▒▒▓▓▓▓██▓▒  ███░░▓██░ ▒▒▓▒▓████▒ ░██▒  ▒██░ ░██▓░ ░░▓  ███░ ▓██▓   ▒████▓   ▓██░░ ▒▒▒  ██▓   ██▓
-     ▓██     ▓▓███▒░       ▒██   ▒██░  ▒██   ░▒█████▒  ░▓███▒██▓    ▓███     ▒▓███▓▓░  ███   ███</pre>
+                    <pre class="logo-ascii" aria-label="404heaven">
+█▓▒   █▓▒  ▄▓█▀▓▄   █▓▒   █▓▒   █▓▒   █▓▒   ▄█▓▀▀▓▒▀ █▓▒▀▀▓▄   █▓▒   ░▄    ▄█▓▀▀▓▒▀ █▓▒▀▀▓▄  
+▓▒░   ▓▒░ ▐▓▒  ▐▒░▄ ▓▒░   ▓▒░   ▓▒░   ▓▒░  ▓▒░   ▀   ▓▒░  ▐▒▄  ▓▒░   ▒░█  ▓▒░   ▀   ▓▒░  ▐▒▄ 
+▀░█▄  ▒░█ ░▒░   ░██ ▀░█▄  ▒░█   ▒░█▄▄▄▒░█ ▐▒░█▄▄     ▒░█▄▄▄░█▌ ▒▒░   ░██ ▐▒░█▄▄     ▒░█   ░█▌
+   ▀▀█░██ █░█   ███    ▀▀█░██   ░██   ░██ ▐██▌    ▄  ░██   ███ ░░█   ███ ▐██▌    ▄  ░██   ███
+      ███ ▀██▄ ▄██▀       ███   ███   ███  ▀░█▄  ░██ ███   ███  ▀█▄ ▄█▀   ▀░█▄  ░██ ███   ███
+      █▀    ▀▀▀▀▀         █▀     ▀█   █▀     ▀▀▀▀▀▀▀  ▀█   █▀     ▀▀       ▀▀▀▀▀▀▀  ▀█   █▀ 
+                    </pre>
                     <p class="tagline">welcome to my little corner of the web</p>
                     <div class="star-rule" aria-hidden="true">☆ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ☆</div>
                 </div>
@@ -373,7 +385,7 @@ _ (`-`) _
                     <pre class="ascii robot" aria-hidden="true"> [o_o]
  /|=|\
   d b</pre>
-                    <span>made with tea<br>and bad decisions</span>
+                    <span>made with tea<br>and many headaches</span>
                 </div>
             </footer>
 
