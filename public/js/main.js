@@ -13,10 +13,6 @@ const CONFIG = {
   // paste your playlist id (the part after ?list= in the url)
   playlistId: "PLAiErhOJQIk4dYgkNprVqeUZVshbw6-gf",
 
-  // journal — your blogspot blog url, no trailing slash.
-  // e.g. "https://myblog.blogspot.com". leave "" to keep manual entries.
-  blogspotUrl: "",
-
   // contador de visitas — vive en supabase, arranca en 0.
   //   "unique" = suma una vez por navegador (el número es "sos la visita nº X")
   //   "visits" = suma una vez por sesión (si vuelve mañana, cuenta de nuevo)
@@ -443,93 +439,6 @@ let initBugCarousel = function () {}; // lo reemplaza el bloque de abajo
   };
 })();
 
-/* ================= journal via blogspot =================
-   Uses blogger's public json feed — no api key needed.
-   Fills the homepage widget and, if present, #journal-feed
-   on the journal page. */
-(function blogspotJournal() {
-  if (!CONFIG.blogspotUrl) return;
-
-  const feedUrl =
-    CONFIG.blogspotUrl.replace(/\/$/, "") +
-    "/feeds/posts/default?alt=json&max-results=10";
-
-  fetch(feedUrl)
-    .then((r) => r.json())
-    .then((data) => {
-      const entries = (data.feed && data.feed.entry) || [];
-      if (!entries.length) return;
-
-      const parse = (e) => ({
-        title: e.title.$t,
-        date: (e.published.$t || "").slice(0, 10),
-        html: e.content ? e.content.$t : (e.summary ? e.summary.$t : ""),
-        url: (e.link.find((l) => l.rel === "alternate") || {}).href || "#",
-      });
-
-      // homepage widget
-      const hjTitle = document.getElementById("hj-title");
-      if (hjTitle) {
-        const p = parse(entries[0]);
-        hjTitle.textContent = p.title;
-        document.getElementById("hj-date").textContent = p.date;
-        const body = document.getElementById("hj-body");
-        const tmp = document.createElement("div");
-        tmp.innerHTML = p.html;
-        const text = tmp.textContent.trim().slice(0, 220);
-        body.innerHTML = "";
-        const para = document.createElement("p");
-        para.textContent = text + (tmp.textContent.length > 220 ? "…" : "");
-        body.appendChild(para);
-      }
-
-      // journal page list
-      const feed = document.getElementById("journal-feed");
-      if (feed) {
-        feed.innerHTML = "";
-        entries.map(parse).forEach((p, i) => {
-          const art = document.createElement("article");
-          art.className = "win";
-          art.innerHTML =
-            '<div class="win__bar"><span class="icon">✎</span>' +
-            '<span class="title">entry</span>' +
-            '<span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span></div>';
-          const body = document.createElement("div");
-          body.className = "win__body";
-
-          const h = document.createElement("h2");
-          h.className = "jp-title";
-          h.textContent = p.title;
-          const d = document.createElement("p");
-          d.className = "jp-date";
-          d.textContent = p.date;
-          const hr = document.createElement("hr");
-          hr.className = "dotrule";
-          const div = document.createElement("div");
-          div.className = "jp-body";
-          const tmp = document.createElement("div");
-          tmp.innerHTML = p.html;
-          const para = document.createElement("p");
-          para.textContent = tmp.textContent.trim().slice(0, 400) + "…";
-          div.appendChild(para);
-          const a = document.createElement("a");
-          a.className = "blink";
-          a.href = p.url;
-          a.target = "_blank";
-          a.rel = "noopener";
-          a.textContent = "[ read full post → ]";
-
-          body.append(h, d, hr, div, a);
-          art.appendChild(body);
-          feed.appendChild(art);
-        });
-      }
-    })
-    .catch(() => {
-      /* feed unreachable — the manual entries stay, no drama */
-    });
-})();
-
 /* ================= violet dithering + lightbox =================
    Every <img class="dither"> gets a canvas overlay with an ordered
    (bayer 4x4) dither in the site's violet palette. Hover fades to
@@ -857,6 +766,279 @@ const PHOTOS = (function photosApi() {
 
   if (grid) fillGrid();
   if (widget) fillLatest();
+})();
+
+/* ================= journal + lab (supabase) =================
+   Las dos secciones son la misma función: cambia la categoría y poco más.
+   Cualquier página con <div id="post-feed" data-category="…"> se llena
+   sola con las filas de la tabla "journal", y en la home el widget
+   #hj-title muestra el post más reciente.
+
+   El HTML de cada post lo escribe el Studio (otro repo) y llega ya
+   sanitizado, pero acá se vuelve a limpiar antes de meterlo en la página:
+   este sitio no controla quién escribió la fila, y "confiá, ya viene
+   limpio" es exactamente la suposición con la que entran los XSS. */
+(function journal() {
+  const feed = document.getElementById("post-feed");     // journal.html / lab.html
+  const widget = document.getElementById("hj-title");    // widget de la home
+  if (!feed && !widget) return;
+
+  // el <p class="feed-status"> del HTML: "loading…" mientras carga, o el
+  // motivo si algo falló. El widget de la home no tiene dónde avisar.
+  const say = (msg) => {
+    if (!feed) return;
+    const status = feed.querySelector(".feed-status");
+    if (status) status.textContent = msg;
+    else feed.textContent = msg;
+  };
+
+  if (!PHOTOS.ready) {
+    console.error("[journal] faltan supabaseUrl / supabaseKey / imagekitUrl en CONFIG (js/main.js)");
+    say("journal not configured — see js/main.js");
+    return;
+  }
+
+  /* ---------- sanitizado ----------
+     El whitelist es EXACTAMENTE el del Studio. Recortarlo de más no es
+     "más seguro": borra formato legítimo (negritas, colores, listas) y el
+     post se ve roto. Se parsea con DOMParser —un documento inerte, que no
+     ejecuta scripts ni pide las imágenes— y se recorre el árbol. Nada de
+     regex: una expresión regular no entiende HTML y siempre se le escapa
+     algo, para un lado o para el otro. */
+  const TAGS = ["p","br","hr","h2","h3","h4","strong","b","em","i","u","s",
+                "sub","sup","blockquote","ul","ol","li","pre","code","a","img","span"];
+  const STYLED = ["p","h2","h3","h4","blockquote","ul","ol","li","pre","span","img"];
+  const ATTRS = { a: ["href","target","rel"], img: ["src","alt","width","height"] };
+  const CSS_PROPS = ["color","background-color","font-size","text-align","width","height","max-width"];
+  const SAFE_HREF = /^(https?:|mailto:|#|\/|\.{1,2}\/)/i;
+  const SAFE_SRC = /^https?:\/\//i;
+
+  const allowed = (tag) =>
+    (ATTRS[tag] || []).concat(STYLED.indexOf(tag) !== -1 ? ["style"] : []);
+
+  // el style se relee del CSSOM y no del string: el navegador ya descartó
+  // lo que no parseaba, así que no hay que escribir un parser de CSS
+  function cleanStyle(el) {
+    const keep = [];
+    CSS_PROPS.forEach((prop) => {
+      const v = el.style.getPropertyValue(prop);
+      if (v && !/url\(|expression|javascript:/i.test(v)) keep.push(prop + ":" + v);
+    });
+    return keep.join(";");
+  }
+
+  function sanitize(html) {
+    const doc = new DOMParser().parseFromString(String(html || ""), "text/html");
+
+    // querySelectorAll da orden de documento: si se cae un padre, sus hijos
+    // ya se fueron con él y lo que quede del recorrido es inofensivo
+    Array.prototype.forEach.call(doc.body.querySelectorAll("*"), (el) => {
+      const tag = el.tagName.toLowerCase();
+      if (TAGS.indexOf(tag) === -1) { el.remove(); return; }
+
+      const ok = allowed(tag);
+      const style = ok.indexOf("style") !== -1 ? cleanStyle(el) : "";
+
+      Array.prototype.forEach.call(Array.prototype.slice.call(el.attributes), (at) => {
+        if (ok.indexOf(at.name.toLowerCase()) === -1) el.removeAttribute(at.name);
+      });
+      if (style) el.setAttribute("style", style);
+      else el.removeAttribute("style");
+
+      if (tag === "a") {
+        const href = (el.getAttribute("href") || "").trim();
+        if (!SAFE_HREF.test(href)) el.removeAttribute("href"); // adiós javascript:
+        // los links de afuera se abren afuera, y sin regalar la referencia
+        if (/^https?:/i.test(href)) {
+          el.setAttribute("target", "_blank");
+          el.setAttribute("rel", "noopener noreferrer");
+        }
+      }
+
+      if (tag === "img") {
+        if (!SAFE_SRC.test((el.getAttribute("src") || "").trim())) { el.remove(); return; }
+        // fuera del whitelist a propósito: los pone la web, no el content.
+        // Sin esto, la página baja las imágenes de TODOS los posts de una.
+        el.setAttribute("loading", "lazy");
+        el.setAttribute("decoding", "async");
+      }
+    });
+
+    return doc.body;
+  }
+
+  // appendChild adopta el nodo del documento inerte al vivo: nunca se toca
+  // innerHTML con contenido de la base
+  function appendClean(host, html) {
+    const clean = sanitize(html);
+    while (clean.firstChild) host.appendChild(clean.firstChild);
+  }
+
+  /* ---------- extracto en texto plano (widget de la home) ---------- */
+  function excerpt(html, max) {
+    const doc = new DOMParser().parseFromString(String(html || ""), "text/html");
+    const text = (doc.body.textContent || "").replace(/\s+/g, " ").trim();
+    if (text.length <= max) return text;
+    const cut = text.slice(0, max);
+    const space = cut.lastIndexOf(" ");
+    return (space > 0 ? cut.slice(0, space) : cut) + "…";
+  }
+
+  /* ---------- fecha ----------
+     "2026-07-31T08:32:50Z" → "31 july 2026". Se parte el string en vez de
+     usar Date() por lo mismo que en PHOTOS.month: new Date(iso) traduce a
+     la zona local y un post de la madrugada aparecería con el día anterior. */
+  function readable(iso) {
+    const m = /^\d{4}-\d{2}-(\d{2})/.exec(iso || "");
+    const monthYear = PHOTOS.month(iso, false);
+    if (!m || !monthYear) return "";
+    return Number(m[1]) + " " + monthYear;
+  }
+
+  /* ---------- lo que cambia entre journal y lab ---------- */
+  const SECTIONS = {
+    journal: { icon: "✎", label: "entry" },
+    lab: { icon: "⚗", label: "project" },
+  };
+
+  function card(row, conf, first) {
+    const art = document.createElement("article");
+    art.className = "win entry-win";
+    if (row.slug) art.id = row.slug; // para poder linkear journal.html#slug
+
+    const bar = document.createElement("div");
+    bar.className = "win__bar";
+    bar.innerHTML =
+      '<span class="icon" aria-hidden="true"></span>' +
+      '<span class="title"></span>' +
+      '<span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>';
+    bar.querySelector(".icon").textContent = conf.icon;
+    bar.querySelector(".title").textContent = conf.label;
+
+    const body = document.createElement("div");
+    body.className = "win__body";
+
+    const h = document.createElement("h2");
+    h.className = "jp-title";
+    h.textContent = row.title || "untitled"; // textContent = injection-proof
+
+    const date = document.createElement("p");
+    date.className = "jp-date";
+    date.textContent = readable(row.created_at);
+
+    const hr = document.createElement("hr");
+    hr.className = "dotrule";
+    body.append(h, date, hr);
+
+    if (row.cover_path) {
+      const cover = document.createElement("div");
+      cover.className = "entry-cover";
+      const img = document.createElement("img");
+      img.alt = ""; // decorativa: el título va al lado, no hay nada que repetir
+      img.decoding = "async";
+      // el cover del primer post está sobre el fold: ponerle lazy ahí atrasa
+      // el LCP en vez de mejorarlo. Del segundo en adelante, lazy.
+      if (!first) img.loading = "lazy";
+      img.src = PHOTOS.img(row.cover_path, 1200);
+      img.addEventListener("error", () =>
+        console.error("[journal] imagekit no devolvió el cover:", img.src)
+      );
+      cover.appendChild(img);
+      body.appendChild(cover);
+    }
+
+    const entry = document.createElement("div");
+    entry.className = "entry";
+    appendClean(entry, row.content);
+    body.appendChild(entry);
+
+    art.append(bar, body);
+    return art;
+  }
+
+  // el navegador ya intentó saltar al ancla al cargar, cuando los posts
+  // todavía no existían: hay que repetirlo una vez que están en la página
+  function jumpToHash() {
+    if (!location.hash) return;
+    let id = location.hash.slice(1);
+    try { id = decodeURIComponent(id); } catch (e) {}
+    const target = id && document.getElementById(id);
+    if (target) target.scrollIntoView();
+  }
+
+  const FIELDS = "id,created_at,title,content,cover_path,slug";
+
+  // published=eq.true va en la query, no en el cliente: un borrador no se
+  // filtra después de haberlo bajado, directamente no se pide
+  function query(cat, extra) {
+    return "journal?select=" + FIELDS +
+           "&category=eq." + encodeURIComponent(cat) +
+           "&published=eq.true&order=created_at.desc" + (extra || "");
+  }
+
+  function fillFeed() {
+    const cat = feed.dataset.category || "journal";
+    const conf = SECTIONS[cat] || SECTIONS.journal;
+
+    PHOTOS.get(query(cat))
+      .then((rows) => {
+        if (!rows.length) {
+          say("nothing here yet");
+          return;
+        }
+        const frag = document.createDocumentFragment();
+        rows.forEach((row, i) => frag.appendChild(card(row, conf, i === 0)));
+        feed.innerHTML = ""; // se va el "loading…"
+        feed.appendChild(frag);
+        jumpToHash();
+      })
+      .catch((err) => {
+        console.error("[journal] no se pudieron leer los posts:", err.message);
+        say("couldn't load posts — check the console");
+      });
+  }
+
+  // widget de la home: el post más reciente, con un extracto en texto plano
+  function fillWidget() {
+    const date = document.getElementById("hj-date");
+    const body = document.getElementById("hj-body");
+    const link = document.getElementById("hj-link");
+
+    // el widget arranca con un "loading…" que hay que reemplazar sí o sí:
+    // si se queda ahí para siempre parece que la página se colgó
+    const note = (msg) => {
+      if (!body) return;
+      const p = document.createElement("p");
+      p.className = "feed-status";
+      p.textContent = msg;
+      body.replaceChildren(p);
+    };
+
+    PHOTOS.get(query("journal", "&limit=1"))
+      .then((rows) => {
+        const row = rows[0];
+        if (!row) {
+          console.warn("[journal] no hay posts publicados: el widget queda vacío");
+          note("nothing here yet");
+          return;
+        }
+        widget.textContent = row.title || "untitled";
+        if (date) date.textContent = readable(row.created_at);
+        if (body) {
+          const p = document.createElement("p");
+          p.textContent = excerpt(row.content, 200);
+          body.replaceChildren(p);
+        }
+        if (link && row.slug) link.href = "journal.html#" + encodeURIComponent(row.slug);
+      })
+      .catch((err) => {
+        console.error("[journal] no se pudo leer el último post:", err.message);
+        note("couldn't load — check the console");
+      });
+  }
+
+  if (feed) fillFeed();
+  if (widget) fillWidget();
 })();
 
 /* ================= bug of the month (supabase + imagekit) =================

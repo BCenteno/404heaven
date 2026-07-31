@@ -36,84 +36,16 @@
       </div>
       <div class="win__body page-head">
         <h1>journal</h1>
-        <p class="sub">thoughts, projects, slow days. not open to visitors just yet.</p>
+        <p class="sub">thoughts, projects, slow days</p>
       </div>
     </div>
     <div class="star-rule" aria-hidden="true">☆ . . . . . . . . . . . . . . . . . . . . . . . . ☆</div>
-    <section class="win">
-      <div class="win__bar">
-        <span class="icon" aria-hidden="true">✎</span>
-        <span class="title">under construction</span>
-        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
-      </div>
-      <div class="win__body">
-        <div class="uc uc--page">
-          <div class="uc-tape" aria-hidden="true"></div>
-          <pre class="ascii uc-sign" aria-hidden="true"> ______________
-| /!\ /!\ /!\  |
-|______________|
-      |  |
-      |  |
-~~~~~~~~~~~~~~~~</pre>
-          <p class="uc-title">under construction</p>
-          <p class="uc-note">the entries are still drafts on my desk. come back in a bit and there'll be something to read here.</p>
-          <p class="uc-back"><a href="index.html">[ ← back home ]</a></p>
-          <div class="uc-tape" aria-hidden="true"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Las entradas vuelven borrando la ventana .uc de arriba y sacando este
-         <template>. Con el id #journal-feed dentro del template, el JS del
-         blogspot tampoco escribe nada mientras la página esté en obras. -->
-    <template class="uc-parked">
-    <!-- if CONFIG.blogspotUrl is set in js/main.js, this container is
-         auto-filled with your latest blogspot posts -->
-    <div class="stack" id="journal-feed">
-    <section class="win">
-      <div class="win__bar">
-        <span class="icon" aria-hidden="true">✎</span>
-        <span class="title">entry 014</span>
-        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
-      </div>
-      <div class="win__body">
-        <h2 class="jp-title">the kiln gives, the kiln takes</h2>
-        <p class="jp-date">2026-07-24</p>
-        <hr class="dotrule">
-        <div class="jp-body"><p>picked up my pieces from the ceramics studio today. three survived: the lopsided mug (beloved), the tiny ring dish, and the plate i glazed twice by accident that somehow came out better for it. one did not survive. a moment of silence.</p><p>clay doesn't have an undo button. that's the whole lesson, really.</p></div>
-        <p><span class="tag">ceramics</span><span class="tag">life</span></p>
-      </div>
-    </section>
-    <section class="win">
-      <div class="win__bar">
-        <span class="icon" aria-hidden="true">✎</span>
-        <span class="title">entry 013</span>
-        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
-      </div>
-      <div class="win__body">
-        <h2 class="jp-title">this website moved houses</h2>
-        <p class="jp-date">2026-07-15</p>
-        <hr class="dotrule">
-        <div class="jp-body"><p>404heaven has new hosting! the move was mostly painless, except for the file-type whitelist drama and rehoming the audio files. if you can read this, it worked.</p></div>
-        <p><span class="tag">meta</span><span class="tag">webdev</span></p>
-      </div>
-    </section>
-    <section class="win">
-      <div class="win__bar">
-        <span class="icon" aria-hidden="true">✎</span>
-        <span class="title">entry 012</span>
-        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
-      </div>
-      <div class="win__body">
-        <h2 class="jp-title">a tiny camera learns to see my face</h2>
-        <p class="jp-date">2026-07-02</p>
-        <hr class="dotrule">
-        <div class="jp-body"><p>the esp32-cam finally streams video without catching fire (emotionally). tonight there was a grainy little feed of my own chin and it felt like landing on the moon. next: ir camera + face tracking for vr. write-up coming to the lab.</p></div>
-        <p><span class="tag">electronics</span><span class="tag">vr</span></p>
-      </div>
-    </section>
+    <!-- Los posts los trae journal() de la tabla "journal" de supabase:
+         category='journal', published=true, más nuevos primero. El
+         data-category es lo único que distingue esta página de lab.html. -->
+    <div class="stack" id="post-feed" data-category="journal">
+      <p class="feed-status">loading…</p>
     </div>
-    </template>
   </main>
 </div>
 <div class="lightbox" id="lightbox" aria-hidden="true"><img alt=""></div>

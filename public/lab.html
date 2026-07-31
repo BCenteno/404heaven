@@ -36,89 +36,15 @@
       </div>
       <div class="win__body page-head">
         <h1>lab</h1>
-        <p class="sub">arduino, esp32, soldering fumes, and things that blink when they shouldn't. mind the cables.</p>
+        <p class="sub">arduino, esp32, soldering fumes, things that blink when they shouldn't</p>
       </div>
     </div>
     <div class="star-rule" aria-hidden="true">☆ . . . . . . . . . . . . . . . . . . . . . . . . ☆</div>
-    <section class="win">
-      <div class="win__bar">
-        <span class="icon" aria-hidden="true">⚗</span>
-        <span class="title">under construction</span>
-        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
-      </div>
-      <div class="win__body">
-        <div class="uc uc--page">
-          <div class="uc-tape" aria-hidden="true"></div>
-          <pre class="ascii uc-sign" aria-hidden="true"> ______________
-| /!\ /!\ /!\  |
-|______________|
-      |  |
-      |  |
-~~~~~~~~~~~~~~~~</pre>
-          <p class="uc-title">under construction</p>
-          <p class="uc-note">the bench is a mess of jumper wires right now. the write-ups go up once the projects stop smoking.</p>
-          <p class="uc-back"><a href="index.html">[ ← back home ]</a></p>
-          <div class="uc-tape" aria-hidden="true"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Los proyectos vuelven borrando la ventana .uc de arriba
-         y sacando este <template>. -->
-    <template class="uc-parked">
-    <div class="grid-2">
-    <section class="win">
-      <div class="win__bar">
-        <span class="icon" aria-hidden="true">⚗</span>
-        <span class="title">project 01</span>
-        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
-      </div>
-      <div class="win__body">
-        <h2 class="jp-title">diy face tracking for vr <span class="status status--wip">in progress</span></h2>
-        <hr class="dotrule">
-        <div class="jp-body"><p>an esp32-cam, a wide-angle lens, ir leds, and a dream: mouth tracking in vrchat without commercial-hardware prices.</p></div>
-        <ul class="plainlist"><li>flash camera firmware <span class="note">done ✓</span></li><li>stable video stream <span class="note">done ✓</span></li><li>osc bridge to vr <span class="note">next</span></li><li>ir camera + leds <span class="note">parts arrived</span></li></ul>
-      </div>
-    </section>
-    <section class="win">
-      <div class="win__bar">
-        <span class="icon" aria-hidden="true">⚗</span>
-        <span class="title">project 02</span>
-        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
-      </div>
-      <div class="win__body">
-        <h2 class="jp-title">argb without an argb header <span class="status status--wip">in progress</span></h2>
-        <hr class="dotrule">
-        <div class="jp-body"><p>the motherboard has no 5v argb header, so a microcontroller running wled became a standalone lighting controller. the pc doesn't even know.</p></div>
-        <ul class="plainlist"><li>wled flashed & running <span class="note">done ✓</span></li><li>level shifter wiring <span class="note">testing</span></li><li>sync with games? <span class="note">stretch goal</span></li></ul>
-      </div>
-    </section>
-    <section class="win">
-      <div class="win__bar">
-        <span class="icon" aria-hidden="true">⚗</span>
-        <span class="title">project 03</span>
-        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
-      </div>
-      <div class="win__body">
-        <h2 class="jp-title">this very website <span class="status status--live">live</span></h2>
-        <hr class="dotrule">
-        <div class="jp-body"><p>hand-written html, css and js. no frameworks, no build step, no node_modules heavier than my soul.</p></div>
-      </div>
-    </section>
-    <section class="win">
-      <div class="win__bar">
-        <span class="icon" aria-hidden="true">⚗</span>
-        <span class="title">project 04</span>
-        <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
-      </div>
-      <div class="win__body">
-        <h2 class="jp-title">desk sensor station <span class="status">someday</span></h2>
-        <hr class="dotrule">
-        <div class="jp-body"><p>temperature, humidity, and a tiny screen that judges how long i've been sitting. an excuse to design my first real pcb.</p></div>
-      </div>
-    </section>
+    <!-- Mismo bloque que journal.html: lo único que cambia es la categoría -->
+    <div class="stack" id="post-feed" data-category="lab">
+      <p class="feed-status">loading…</p>
     </div>
-    </template>
+
   </main>
 </div>
 <div class="lightbox" id="lightbox" aria-hidden="true"><img alt=""></div>

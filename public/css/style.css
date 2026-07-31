@@ -760,11 +760,119 @@ body:has(.page){ display:block; padding:0; }
     border:1px solid var(--border);
     display:flex;
     flex-direction:column;
+    /* item de grilla: sin esto su ancho mínimo es el de su contenido, y
+       algo que no pueda partirse (una línea de código, una URL larga)
+       estira la ventana fuera de la pantalla en vez de scrollear adentro */
+    min-width:0;
 }
 .win .win__body{ overflow:visible; display:block; flex:none; }
 
 .page-head h1{ font-size:1.125rem; color:var(--white); font-weight:500; }
 .page-head .sub{ color:var(--vio-soft); margin-top:.25rem; font-size:.78rem; }
+
+/* =======================================================
+   POST — journal y lab
+   El HTML de cada post lo escribe el Studio y viene casi
+   pelado: solo trae estilos inline para color, tamaño de
+   fuente, alineación y ancho de imagen. TODO lo estructural
+   (jerarquía, sangrías, bullets, márgenes) se define acá, o
+   el post se ve como HTML crudo. Ojo con el reset de arriba:
+   `*{margin:0;padding:0}` deja las listas sin viñeta y sin
+   sangría, así que hay que devolvérselas a mano.
+======================================================= */
+
+.entry-win .win__body{ padding:.8125rem 1rem 1rem; }
+
+.entry-cover{
+    border:1px solid var(--border-dim);
+    background:#000;
+    margin:.75rem 0 1rem;
+}
+.entry-cover img{ width:100%; height:auto; }
+
+.entry{
+    /* los tamaños del content son em (0.8em / 1.3em / 1.8em), o sea
+       relativos a esto: si esta base cambia, cambia todo el post */
+    font-size:.82rem;
+    line-height:1.7;
+    color:var(--vio);
+    /* el texto lo escribo yo y puede traer una URL larguísima: sin esto
+       estira la ventana y rompe la grilla de la página */
+    overflow-wrap:anywhere;
+}
+.entry > :first-child{ margin-top:0; }
+.entry > :last-child{ margin-bottom:0; }
+
+.entry p{ margin:0 0 .9rem; }
+
+.entry h2,
+.entry h3,
+.entry h4{ color:var(--white); font-weight:500; line-height:1.35; margin:1.5rem 0 .5rem; }
+.entry h2{ font-size:1.15rem; }
+.entry h3{ font-size:1rem; }
+.entry h4{ font-size:.9rem; color:var(--bright); }
+
+.entry strong,
+.entry b{ color:var(--white); font-weight:500; }
+.entry em,
+.entry i{ font-style:italic; }
+.entry u{ text-underline-offset:.15em; }
+.entry s{ opacity:.7; }
+.entry sub,
+.entry sup{ font-size:.72em; line-height:0; }
+
+.entry a{ color:var(--bright); text-decoration:underline; text-underline-offset:.15em; }
+.entry a:hover{ color:#fff; }
+
+.entry blockquote{
+    border-left:2px solid var(--border);
+    background:var(--panel-2);
+    padding:.5rem .9rem;
+    margin:1.1rem 0;
+    color:var(--vio-soft);
+    font-style:italic;
+}
+
+.entry ul,
+.entry ol{ margin:0 0 .9rem; padding-left:1.6rem; }
+.entry ul{ list-style:disc; }
+.entry ol{ list-style:decimal; }
+.entry li{ margin:.2rem 0; }
+.entry li::marker{ color:var(--vio-faint); }
+
+.entry hr{
+    border:0;
+    border-top:1px dotted var(--border-dim);
+    margin:1.4rem 0;
+}
+
+.entry code{
+    background:var(--panel-2);
+    border:1px solid var(--border-dim);
+    padding:0 .25rem;
+    color:var(--bright);
+    font-size:.95em;
+}
+.entry pre{
+    background:var(--panel-2);
+    border:1px solid var(--border-dim);
+    padding:.7rem .8rem;
+    margin:0 0 .9rem;
+    font-size:.95em;
+    /* el código no se parte solo: que scrollee la caja, no la página */
+    overflow-x:auto;
+    white-space:pre;
+}
+.entry pre code{ background:none; border:0; padding:0; font-size:1em; }
+
+/* el ancho lo trae la imagen en su style inline (width:35%, etc.): acá
+   solo se centra y se le pone un techo para que no desborde en mobile */
+.entry img{
+    display:block;
+    margin:1.2rem auto;
+    max-width:100%;
+    height:auto;
+}
 
 .stack{ display:grid; gap:.9375rem; }
 .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:.9375rem; }

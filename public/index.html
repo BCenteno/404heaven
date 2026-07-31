@@ -291,35 +291,20 @@ _ (`-`) _
                         <span class="title">latest journal entry</span>
                         <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
                     </div>
+                    <!-- lo llena journal() con el post más reciente de supabase.
+                         Arranca vacío: no hay copia local de los posts, así que
+                         inventar texto de relleno sería mentir. -->
                     <div class="win__body">
-                        <div class="uc">
-                            <div class="uc-tape" aria-hidden="true"></div>
-                            <pre class="ascii uc-sign" aria-hidden="true"> ________
-| /!\/!\ |
-|________|</pre>
-                            <p class="uc-title">under construction</p>
-                            <p class="uc-note">still writing. the first entries land soon.</p>
-                            <div class="uc-tape" aria-hidden="true"></div>
-                        </div>
-                    </div>
-
-                    <!-- el widget real vuelve borrando el bloque .uc de arriba y
-                         sacando este <template>. El JS del journal solo escribe
-                         aquí cuando #hj-title existe de verdad en la página. -->
-                    <template class="uc-parked">
-                        <div class="win__body">
-                            <p class="jp-title" id="hj-title">slow days</p>
-                            <p class="jp-date"  id="hj-date">2026-07-17</p>
-                            <hr class="dotrule">
-                            <div class="jp-scroll">
-                                <div class="jp-body" id="hj-body">
-                                    <p>today was one of those slow, quiet days i didn't plan. i soldered a bit, read a few pages, and watched the rain from my window.</p>
-                                    <p>these are the days that remind me to breathe.</p>
-                                </div>
+                        <p class="jp-title" id="hj-title"></p>
+                        <p class="jp-date" id="hj-date"></p>
+                        <hr class="dotrule">
+                        <div class="jp-scroll">
+                            <div class="jp-body" id="hj-body">
+                                <p class="feed-status">loading…</p>
                             </div>
-                            <a class="blink" href="journal.html">[ read more → ]</a>
                         </div>
-                    </template>
+                        <a class="blink" id="hj-link" href="journal.html">[ read more → ]</a>
+                    </div>
                 </article>
 
                 <article class="window bug" id="latest-bug">
