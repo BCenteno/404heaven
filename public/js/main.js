@@ -67,23 +67,31 @@ const CONFIG = {
    dar permiso de escritura a cualquiera. Se llama a bump_visits(), una
    función SECURITY DEFINER que solo sabe hacer +1 y devolver el total.
 
-   Cada navegador suma una sola vez (ver CONFIG.counterMode) y se guarda
-   el número que le tocó, así al volver ve el suyo y no infla la cuenta
-   recargando la página. */
+   En pantalla siempre va el TOTAL de la base, no el número que le tocó a
+   cada uno: el contador tiene que verse crecer cuando entra otra gente.
+   Sumar es otra cosa, y eso sí pasa una sola vez por navegador (o por
+   sesión, ver CONFIG.counterMode). O sea: quien recarga cien veces ve el
+   número moverse si entró alguien más, pero no lo mueve él. */
 (function visitorCounter() {
   const el = document.getElementById("visitor-counter");
   if (!el) return;
 
-  const MINE = "heaven404_visitor_no";  // el número que me tocó
-  const SEEN = "heaven404_counted";     // ya conté en esta sesión
+  const LAST = "heaven404_visitor_no"; // último total que vio este navegador
+  const SEEN = "heaven404_counted";    // este navegador (o sesión) ya sumó
+
+  // en "visits" la marca vive en la sesión, así que quien vuelve mañana
+  // cuenta otra vez; en "unique" vive en el disco y cuenta una sola vez
+  const perSession = CONFIG.counterMode === "visits";
+  const store = perSession ? sessionStorage : localStorage;
 
   const show = (n) => { el.textContent = String(n).padStart(6, "0"); };
-  const readInt = (store, k) => {
-    try { return parseInt(store.getItem(k), 10); } catch (e) { return NaN; }
-  };
+  const get = (s, k) => { try { return s.getItem(k); } catch (e) { return null; } };
+  const set = (s, k, v) => { try { s.setItem(k, v); } catch (e) {} };
+  const del = (s, k) => { try { s.removeItem(k); } catch (e) {} };
 
-  const mine = readInt(localStorage, MINE);
-  if (!isNaN(mine)) show(mine); // algo honesto en pantalla mientras responde la red
+  // el último total conocido, para no mostrar 000000 mientras contesta la red
+  const last = parseInt(get(localStorage, LAST), 10);
+  if (!isNaN(last)) show(last);
 
   const base = (CONFIG.supabaseUrl || "").replace(/\/+$/, "");
   const key = CONFIG.supabaseKey || "";
@@ -92,23 +100,32 @@ const CONFIG = {
     return;
   }
 
-  // ¿a esta persona ya la contamos?
-  let counted = !isNaN(mine);
-  if (CONFIG.counterMode === "visits") {
-    try { counted = !!sessionStorage.getItem(SEEN); } catch (e) { counted = false; }
-  }
-  if (counted) return;
+  // ¿a esta persona ya la contamos? el !isNaN(last) cubre a los navegadores
+  // que ya habían sumado con la versión anterior, que no dejaba esta marca
+  const counted = perSession
+    ? !!get(sessionStorage, SEEN)
+    : !!get(localStorage, SEEN) || !isNaN(last);
 
-  fetch(base + "/rest/v1/rpc/bump_visits", {
-    method: "POST",
-    headers: {
-      apikey: key,
-      Authorization: "Bearer " + key,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: "{}",
-  })
+  // La marca se pone ANTES de pedir, no cuando contesta: si alguien abre
+  // cinco pestañas de golpe, las otras cuatro la encuentran puesta y solo
+  // leen. Si el pedido falla se deshace, para poder reintentar más tarde.
+  if (!counted) set(store, SEEN, "1");
+
+  const headers = { apikey: key, Authorization: "Bearer " + key };
+
+  // sumar y leer devuelven lo mismo —el total— así que da igual cuál toque
+  const ask = counted
+    ? fetch(base + "/rest/v1/counters?id=eq.visits&select=n", { headers })
+    : fetch(base + "/rest/v1/rpc/bump_visits", {
+        method: "POST",
+        headers: Object.assign({}, headers, {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }),
+        body: "{}",
+      });
+
+  ask
     .then((res) => {
       if (res.ok) return res.json();
       return res.text().then((body) => {
@@ -116,20 +133,18 @@ const CONFIG = {
       });
     })
     .then((data) => {
-      // postgrest devuelve el escalar pelado (42), pero según la versión
-      // puede venir envuelto en array o en objeto: aceptamos las tres
+      // el select devuelve [{n:10}]; la función, el escalar pelado (10).
+      // Según la versión de postgrest puede venir envuelto: las tres valen
       const row = Array.isArray(data) ? data[0] : data;
       const n = Number(row && typeof row === "object" ? Object.values(row)[0] : row);
       if (!isFinite(n)) throw new Error("respuesta inesperada: " + JSON.stringify(data));
 
       show(n);
-      try {
-        localStorage.setItem(MINE, String(n));
-        sessionStorage.setItem(SEEN, "1");
-      } catch (e) {}
+      set(localStorage, LAST, String(n));
     })
     .catch((err) => {
-      console.error("[counter] no se pudo sumar la visita:", err.message);
+      if (!counted) del(store, SEEN); // no llegó a sumar: que pueda reintentar
+      console.error("[counter] " + (counted ? "no se pudo leer el total:" : "no se pudo sumar la visita:"), err.message);
     });
 })();
 
