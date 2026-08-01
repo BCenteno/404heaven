@@ -9,9 +9,8 @@ const CONFIG = {
   // welcome screen: "first" = only first visit, "always" = every visit, "never" = off
   welcomeScreen: "first",
 
-  // now playing — a real youtube playlist.
-  // paste your playlist id (the part after ?list= in the url)
-  playlistId: "PLAiErhOJQIk4dYgkNprVqeUZVshbw6-gf",
+  // now playing — la playlist vive en la tabla "songs" de supabase y los
+  // mp3 / covers los sirve imagekit. No hay nada que configurar acá.
 
   // contador de visitas — vive en supabase, arranca en 0.
   //   "unique" = suma una vez por navegador (el número es "sos la visita nº X")
@@ -350,95 +349,6 @@ let initBugCarousel = function () {}; // lo reemplaza el bloque de abajo
   setup(); // no hace nada si el deck todavía está vacío
 })();
 
-/* ================= now playing (real youtube playlist) ================= */
-(function nowPlaying() {
-  const frame = document.getElementById("np-frame");
-  if (!frame) return;
-
-  if (!CONFIG.playlistId || CONFIG.playlistId.startsWith("PLxxx")) {
-    frame.innerHTML = "<span>set your playlist id<br>in js/main.js</span>";
-    return;
-  }
-
-  // load the youtube iframe api
-  const tag = document.createElement("script");
-  tag.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(tag);
-
-  let player = null;
-  let timeTimer = null;
-
-  const $ = (id) => document.getElementById(id);
-  const fmt = (s) => {
-    s = Math.max(0, Math.floor(s || 0));
-    return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
-  };
-
-  function updateMeta() {
-    if (!player || !player.getVideoData) return;
-    const d = player.getVideoData();
-    if (!d || !d.title) return;
-    // youtube titles are usually "Artist - Song"; split politely
-    const parts = d.title.split(/\s+[-–—]\s+/);
-    const album = $("np-album");
-    if (parts.length >= 2) {
-      $("np-title").textContent = parts[0];
-      $("np-track").textContent = parts.slice(1).join(" – ");
-      if (album) album.textContent = d.author || "";
-    } else {
-      $("np-title").textContent = d.title;
-      $("np-track").textContent = "";
-      if (album) album.textContent = d.author || "";
-    }
-  }
-
-  function tick() {
-    if (!player || !player.getCurrentTime) return;
-    $("np-time").textContent =
-      fmt(player.getCurrentTime()) + " / " + fmt(player.getDuration());
-  }
-
-  window.onYouTubeIframeAPIReady = function () {
-    frame.innerHTML = "";
-    const holder = document.createElement("div");
-    frame.appendChild(holder);
-
-    player = new YT.Player(holder, {
-      width: "100%",
-      height: "100%",
-      playerVars: {
-        listType: "playlist",
-        list: CONFIG.playlistId,
-        controls: 0,
-        rel: 0,
-        modestbranding: 1,
-      },
-      events: {
-        onReady: () => { updateMeta(); tick(); },
-        onStateChange: (e) => {
-          updateMeta();
-          const play = $("np-play");
-          if (e.data === YT.PlayerState.PLAYING) {
-            play.textContent = "▮▮";
-            clearInterval(timeTimer);
-            timeTimer = setInterval(tick, 1000);
-          } else {
-            play.textContent = "▶";
-            clearInterval(timeTimer);
-          }
-        },
-      },
-    });
-
-    $("np-prev").addEventListener("click", () => player.previousVideo());
-    $("np-next").addEventListener("click", () => player.nextVideo());
-    $("np-play").addEventListener("click", () => {
-      const s = player.getPlayerState();
-      s === YT.PlayerState.PLAYING ? player.pauseVideo() : player.playVideo();
-    });
-  };
-})();
-
 /* ================= violet dithering + lightbox =================
    Every <img class="dither"> gets a canvas overlay with an ordered
    (bayer 4x4) dither in the site's violet palette. Hover fades to
@@ -520,9 +430,11 @@ let applyDither = function () {}; // lo reemplaza el bloque de abajo
     // si la imagen no carga, el canvas vacío taparía el hueco: fuera
     img.addEventListener("error", () => canvas.remove());
 
-    // si la foto ya vive dentro de un enlace (el widget de la home), el clic
-    // es del enlace: abrir el lightbox además solo pisaría la navegación
-    if (img.closest("a")) {
+    // data-nozoom = esta imagen no se agranda, solo se revela al pasar el
+    // mouse (el cover del player: se pide chico y no hay versión grande).
+    // Si la foto vive dentro de un enlace, el clic es del enlace: abrir el
+    // lightbox además solo pisaría la navegación.
+    if (img.dataset.nozoom !== undefined || img.closest("a")) {
       wrap.style.cursor = "";
     } else {
       // data-full = versión grande (imagekit); si no hay, la misma imagen
@@ -1267,6 +1179,307 @@ const PHOTOS = (function photosApi() {
     .catch((err) => {
       console.error("[bug] no se pudieron leer los bichos:", err.message);
       say("couldn't load bugs — check the console");
+    });
+})();
+
+/* ================= now playing — el reproductor (supabase + imagekit) =================
+   La playlist es la tabla "songs" (id, title, artist, song_path,
+   cover_path, sort_order); los mp3 y los covers los sirve imagekit.
+   Un solo <audio> para todas: cambiar de canción es cambiarle el src.
+
+   El dither del cover no se rehace acá: la <img class="dither"> ya vive
+   en el HTML, así que el bloque de dithering la enganchó al cargar y se
+   repinta sola en cada 'load' — o sea, cada vez que le cambiamos el src. */
+(function musicPlayer() {
+  const audio = document.getElementById("np-audio");
+  if (!audio) return; // fuera de la home no hay reproductor
+
+  const $ = (id) => document.getElementById(id);
+  const cover = $("np-cover");
+  const titleEl = $("np-title");
+  const artistEl = $("np-artist");
+  const timeEl = $("np-time");
+  const prevBtn = $("np-prev");
+  const playBtn = $("np-play");
+  const nextBtn = $("np-next");
+  const volBar = $("np-vol");
+  const muteBtn = $("np-mute");
+
+  const cdn = (CONFIG.imagekitUrl || "").replace(/\/+$/, "");
+
+  /* {imagekitUrl}/{path}[?tr=…]. Cada segmento va por encodeURIComponent
+     pero las barras NO: son carpetas, no parte del nombre. Sin esto las
+     canciones con espacios, "⚸", apóstrofos o paréntesis dan 404.
+
+     Y al revés: imagekit compara la ruta tal cual viene, sin decodificar,
+     así que los signos que un path admite en crudo tienen que quedar en
+     crudo. La coma es el caso real de esta playlist — "tomcbumpz, ivri"
+     con %2C da 404 y con "," da 200. Son los sub-delims de RFC 3986:
+     $ & + , : ; = @  (a ! ' ( ) * encodeURIComponent ya los deja pasar). */
+  const RAW = /%(24|26|2B|2C|3A|3B|3D|40)/g;
+
+  function fileUrl(path, tr) {
+    const clean = String(path || "").replace(/^\/+/, "");
+    const enc = clean
+      .split("/")
+      .map((seg) =>
+        encodeURIComponent(seg).replace(RAW, (m, hex) =>
+          String.fromCharCode(parseInt(hex, 16))
+        )
+      )
+      .join("/");
+    return cdn + "/" + enc + (tr ? "?tr=" + tr : "");
+  }
+
+  // segundos → "m:ss"; duration es NaN hasta que llegan los metadatos
+  function fmt(s) {
+    if (!isFinite(s) || s < 0) s = 0;
+    s = Math.floor(s);
+    return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+  }
+
+  /* ---------- marquee ----------
+     Si el texto entra en la columna se queda quieto; si no, el <span> se
+     desplaza justo lo que sobra (--np-shift) y vuelve. La velocidad es la
+     misma para un título largo que para uno corto. */
+  function marquee(span) {
+    const line = span.parentElement;
+    line.classList.remove("is-scrolling");
+    span.style.removeProperty("--np-shift");
+    span.style.removeProperty("--np-dur");
+
+    const over = span.getBoundingClientRect().width - line.getBoundingClientRect().width;
+    if (over <= 1) return; // entra entero: nada que desplazar
+
+    span.style.setProperty("--np-shift", "-" + Math.ceil(over) + "px");
+    span.style.setProperty("--np-dur", (6 + over / 25).toFixed(1) + "s");
+    line.classList.add("is-scrolling");
+  }
+
+  // medir después de que el navegador maquetó el texto nuevo
+  function remeasure() {
+    requestAnimationFrame(() => { marquee(titleEl); marquee(artistEl); });
+  }
+
+  // la webfont cambia los anchos: lo que entraba con la fallback puede no
+  // entrar después, así que se vuelve a medir cuando termina de cargar
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
+
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(remeasure, 200);
+  });
+
+  /* ---------- estado ---------- */
+  let songs = [];
+  let current = 0;
+  let broken = 0;      // mp3 seguidos que no cargaron, para no girar en el vacío
+  let wanted = false;  // ¿la última orden fue sonar? (paused no sirve: un mp3
+                       // roto deja el audio en pausa aunque quisiéramos oírlo)
+  let opened = false;  // ya se pasó la puerta de entrada
+  let started = false; // el autoplay se intenta una sola vez
+
+  /* la puerta de entrada (welcome screen). Si está puesta, la música espera
+     a que la abras: ese clic además es la interacción que el navegador
+     necesita para dejar sonar el audio. Si no está —el welcome ya se mostró
+     en una visita anterior y el bloque de arriba lo sacó del DOM— se
+     intenta igual al cargar, que es lo que pediste ver al llegar a la home. */
+  const door = document.getElementById("ws-enter");
+  if (door) {
+    door.addEventListener("click", () => { opened = true; autostart(); }, { once: true });
+  }
+
+  // aviso discreto: el widget se queda sin playlist pero la home sigue viva
+  function note(msg) {
+    titleEl.textContent = msg;
+    artistEl.textContent = "";
+    timeEl.textContent = "";
+    remeasure();
+    [prevBtn, playBtn, nextBtn].forEach((b) => { b.disabled = true; });
+  }
+
+  function play() {
+    wanted = true;
+    const p = audio.play();
+    // play() rechaza si el navegador aún no vio una interacción del usuario
+    if (p && p.catch) {
+      p.catch((err) => console.error("[player] el navegador no dejó reproducir:", err.message));
+    }
+  }
+
+  /* arranque solo. Puede llegar por dos lados —la playlist que termina de
+     cargar o el clic de la puerta— y no se sabe cuál va primero, así que
+     cada uno llama y el que llega tarde es el que arranca de verdad. */
+  function autostart() {
+    if (started || !songs.length) return;
+    if (door && !opened) return; // todavía está la puerta: se espera al clic
+
+    started = true;
+    wanted = true;
+    const p = audio.play();
+    if (p && p.catch) {
+      p.catch((err) => {
+        // sin puerta que abrir no hubo ninguna interacción todavía, y casi
+        // todos los navegadores piden una antes de dejar sonar nada
+        console.warn("[player] autoplay bloqueado, arranca al primer clic:", err.message);
+        firstGesture();
+      });
+    }
+  }
+
+  // plan B del autoplay: el primer clic o tecla en cualquier parte de la
+  // página ya sirve como permiso, y el oyente se saca en cuanto se usa
+  function firstGesture() {
+    const events = ["pointerdown", "keydown"];
+    const go = () => {
+      events.forEach((ev) => document.removeEventListener(ev, go, true));
+      play();
+    };
+    events.forEach((ev) => document.addEventListener(ev, go, true));
+  }
+
+  function load(i, andPlay) {
+    if (!songs.length) return;
+    current = ((i % songs.length) + songs.length) % songs.length;
+    const song = songs[current];
+
+    titleEl.textContent = song.title || "untitled";
+    artistEl.textContent = song.artist || "";
+    remeasure();
+    timeEl.textContent = "0:00 / 0:00";
+
+    // crossOrigin ANTES que src: si no, el navegador pide la imagen sin
+    // cabeceras CORS y el canvas del dither queda tainted
+    cover.crossOrigin = "anonymous";
+    // alt vacío a propósito: la tapa es decorativa —el título está al lado—
+    // y así un cover que falta deja el recuadro negro en vez del texto roto
+    if (song.cover_path) {
+      cover.src = fileUrl(song.cover_path, "w-160"); // se ve chico: no agrandar
+    } else {
+      console.warn("[player] la canción no tiene cover_path:", song.title || song.id);
+      cover.removeAttribute("src");
+      // sin 'error' que lo limpie, el dither de la anterior se quedaría puesto
+      const stale = cover.parentElement && cover.parentElement.querySelector("canvas");
+      if (stale) stale.remove();
+    }
+
+    audio.src = fileUrl(song.song_path);
+    audio.load();
+    if (andPlay) play();
+  }
+
+  /* ---------- audio ---------- */
+  const tick = () => {
+    timeEl.textContent = fmt(audio.currentTime) + " / " + fmt(audio.duration);
+  };
+  audio.addEventListener("timeupdate", tick);
+  audio.addEventListener("loadedmetadata", tick);
+  audio.addEventListener("durationchange", tick);
+
+  // el botón sigue al estado real del audio, no al revés: así queda bien
+  // aunque la reproducción la corte el navegador o falle el archivo
+  audio.addEventListener("play", () => {
+    playBtn.textContent = "⏸";
+    playBtn.setAttribute("aria-label", "pause");
+  });
+  audio.addEventListener("pause", () => {
+    playBtn.textContent = "▶";
+    playBtn.setAttribute("aria-label", "play");
+  });
+
+  audio.addEventListener("canplay", () => { broken = 0; });
+
+  // fin de canción → la siguiente; después de la última, la primera otra vez
+  audio.addEventListener("ended", () => load(current + 1, true));
+
+  audio.addEventListener("error", () => {
+    if (!audio.currentSrc && !audio.getAttribute("src")) return; // src vaciado a mano
+    const err = audio.error;
+    console.error(
+      "[player] no se pudo cargar el mp3:",
+      audio.currentSrc || audio.src,
+      err ? "(code " + err.code + ")" : ""
+    );
+    broken++;
+    if (broken >= songs.length) {
+      note("couldn't play the playlist — check the console");
+      return;
+    }
+    // saltar a la siguiente; solo sigue sonando si ya estábamos en eso
+    load(current + 1, wanted);
+  });
+
+  cover.addEventListener("error", () => {
+    if (cover.getAttribute("src")) console.error("[player] imagekit no devolvió el cover:", cover.src);
+  });
+
+  /* ---------- controles ---------- */
+  playBtn.addEventListener("click", () => {
+    if (audio.paused) {
+      play();
+    } else {
+      wanted = false;
+      audio.pause();
+    }
+  });
+  // "si ya venía sonando": cambiar de canción no arranca el audio por su cuenta
+  prevBtn.addEventListener("click", () => load(current - 1, wanted));
+  nextBtn.addEventListener("click", () => load(current + 1, wanted));
+
+  /* ---------- volumen ---------- */
+  const paintVol = (v) => volBar.style.setProperty("--np-fill", v + "%");
+
+  volBar.value = 35;
+  audio.volume = 0.35;
+  paintVol(35);
+
+  volBar.addEventListener("input", () => {
+    const v = Number(volBar.value);
+    audio.volume = v / 100;
+    paintVol(v);
+    // tocar la barra estando en mute y no oír nada es desconcertante
+    if (audio.muted && v > 0) audio.muted = false;
+  });
+
+  muteBtn.addEventListener("click", () => { audio.muted = !audio.muted; });
+
+  // muted no toca volume, así que al desmutear vuelve solo al valor de antes
+  audio.addEventListener("volumechange", () => {
+    muteBtn.textContent = audio.muted ? "🕪×" : "🕪";
+    muteBtn.setAttribute("aria-label", audio.muted ? "unmute" : "mute");
+    muteBtn.setAttribute("aria-pressed", String(audio.muted));
+  });
+
+  /* ---------- la playlist ---------- */
+  if (!PHOTOS.ready) {
+    console.error("[player] faltan supabaseUrl / supabaseKey / imagekitUrl en CONFIG (js/main.js)");
+    note("player not configured — see js/main.js");
+    return;
+  }
+
+  PHOTOS.get("songs?select=*&order=sort_order.asc")
+    .then((rows) => {
+      songs = (rows || []).filter((row) => {
+        if (row.song_path) return true;
+        console.warn("[player] fila sin song_path, se salta:", row.id);
+        return false;
+      });
+
+      if (!songs.length) {
+        console.warn("[player] la tabla songs está vacía");
+        note("no songs yet");
+        return;
+      }
+
+      [prevBtn, playBtn, nextBtn].forEach((b) => { b.disabled = false; });
+
+      load(0, false);
+      autostart(); // suena sola al llegar a la home
+    })
+    .catch((err) => {
+      console.error("[player] no se pudieron leer las canciones:", err.message);
+      note("couldn't load the playlist");
     });
 })();
 

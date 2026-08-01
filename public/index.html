@@ -202,45 +202,38 @@ _|________|_
                         <span class="title">now playing</span>
                         <span class="win__btns" aria-hidden="true"><span>–</span><span>×</span></span>
                     </div>
+                    <!-- vacío a propósito: lo llena musicPlayer() con la tabla
+                         "songs" de supabase; los mp3 y los covers los sirve
+                         imagekit. Los botones arrancan disabled hasta que haya
+                         playlist que tocar. -->
                     <div class="win__body">
-                        <div class="uc">
-                            <div class="uc-tape" aria-hidden="true"></div>
-                            <pre class="ascii uc-sign" aria-hidden="true"> ________
-| /!\/!\ |
-|________|</pre>
-                            <p class="uc-title">under construction</p>
-                            <p class="uc-note">the player is being wired up. music soon.</p>
-                            <div class="uc-tape" aria-hidden="true"></div>
+                        <div class="np-top">
+                            <div class="np-cover">
+                                <!-- crossorigin: sin él el canvas del dither queda tainted.
+                                     data-nozoom: la tapa no abre el lightbox, solo
+                                     se revela con el hover -->
+                                <img class="dither" id="np-cover" alt="" crossorigin="anonymous" data-nozoom>
+                            </div>
+                            <div class="np-meta">
+                                <p class="np-line np-title"><span id="np-title">loading…</span></p>
+                                <p class="np-line np-artist"><span id="np-artist"></span></p>
+                                <p class="np-time" id="np-time">0:00 / 0:00</p>
+                            </div>
                         </div>
+                        <div class="np-bottom">
+                            <hr class="dotrule">
+                            <div class="np-volume">
+                                <input class="np-vol" id="np-vol" type="range" min="0" max="100" value="35" aria-label="volume">
+                                <button class="np-mute" id="np-mute" type="button" aria-label="mute" aria-pressed="false">🕪</button>
+                            </div>
+                            <div class="np-controls">
+                                <button id="np-prev" type="button" aria-label="previous song" disabled>⏮</button>
+                                <button id="np-play" type="button" aria-label="play" disabled>▶</button>
+                                <button id="np-next" type="button" aria-label="next song" disabled>⏭</button>
+                            </div>
+                        </div>
+                        <audio class="np-audio" id="np-audio" preload="metadata"></audio>
                     </div>
-
-                    <!-- el reproductor real vuelve borrando el bloque .uc de arriba
-                         y sacando este <template>. El JS de now playing se activa
-                         solo cuando #np-frame existe de verdad en la página. -->
-                    <template class="uc-parked">
-                        <div class="win__body">
-                            <div class="np-top">
-                                <!-- becomes the real youtube player when CONFIG.playlistId is set -->
-                                <div class="np-video" id="np-frame">
-                                    <span>set playlist id<br>in js/main.js</span>
-                                </div>
-                                <div class="np-meta">
-                                    <p class="np-title" id="np-title">Portishead</p>
-                                    <p class="np-album" id="np-album">Dummy (1994)</p>
-                                    <p class="np-track" id="np-track">01. Mysterons</p>
-                                    <p class="np-time"  id="np-time">1:23 / 5:06</p>
-                                </div>
-                            </div>
-                            <div class="np-bottom">
-                                <hr class="dotrule">
-                                <div class="np-controls">
-                                    <button id="np-prev" aria-label="previous track">◀◀</button>
-                                    <button id="np-play" aria-label="play or pause">▮▮</button>
-                                    <button id="np-next" aria-label="next track">▶▶</button>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
                 </article>
 
                 <article class="window brain">

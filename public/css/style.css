@@ -453,41 +453,125 @@ img{ max-width:100%; display:block; }
 .welcome .heart{ color:var(--vio-soft); margin-top:.3125rem; }
 
 /* =======================================================
-   MUSIC (now playing)
+   MUSIC (now playing) — reproductor real
+   Dos columnas iguales: cover cuadrado (con dither) a la
+   izquierda, título / artista / tiempo a la derecha. Debajo,
+   a lo ancho, el volumen y los tres botones.
 ======================================================= */
 
-.np-top{ display:flex; gap:.8125rem; flex:1; min-height:0; }
-.np-video{
-    width:52%;
-    aspect-ratio:16/10;
-    max-height:100%;
+.np-top{
+    display:grid;
+    grid-template-columns:1fr 1fr; /* las dos columnas miden lo mismo */
+    gap:.8125rem;
+    flex:1;
+    min-height:0;
+    align-items:center;
+}
+
+/* el cuadrado manda sobre el alto, no sobre el ancho: la home no
+   scrollea, así que la ventana puede quedar más baja que ancha y un
+   cover atado al ancho de la columna se saldría por abajo */
+.np-cover{
+    height:100%;
+    aspect-ratio:1;
+    max-width:100%;
+    justify-self:center;
     background:#000;
     border:1px solid var(--border-dim);
-    display:grid;
-    place-items:center;
-    color:var(--vio-faint);
-    font-size:.6875rem;
-    text-align:center;
     overflow:hidden;
-    align-self:center;
+    display:grid;
+    grid-template-rows:100%;
+    grid-template-columns:100%;
+    place-items:center;
 }
-.np-video iframe{ width:100%; height:100%; border:0; }
-.np-meta{ align-self:center; min-width:0; }
-.np-title{ color:var(--bright); font-size:.9375rem; margin-bottom:.375rem; }
-.np-album,
-.np-track,
-.np-time{ font-size:.78rem; margin-bottom:.375rem; }
-.np-time{ margin-bottom:0; }
+/* igual que en .mem-photo: la imagen y el canvas del dither ocupan la
+   celda entera, si no el alto en % no resuelve y object-fit no hace nada */
+.np-cover img,
+.np-cover .dither-wrap{
+    grid-area:1/1;
+    align-self:stretch;
+    justify-self:stretch;
+    width:100%;
+    height:100%;
+}
+.np-cover img{ object-fit:cover; object-position:center; }
+
+.np-meta{ min-width:0; }
+
+/* marquee horizontal: el <p> recorta y el <span> de adentro se desplaza
+   sólo si el texto no entra. El JS mide y pone --np-shift / --np-dur. */
+.np-line{ overflow:hidden; white-space:nowrap; min-width:0; }
+.np-line > span{ display:inline-block; white-space:pre; }
+.np-line.is-scrolling > span{
+    animation:np-marquee var(--np-dur,12s) ease-in-out infinite;
+}
+/* ida, pausa, vuelta: nunca hay un salto seco al volver al principio */
+@keyframes np-marquee{
+    0%,12%   { transform:translateX(0); }
+    46%,58%  { transform:translateX(var(--np-shift,0)); }
+    92%,100% { transform:translateX(0); }
+}
+
+.np-title{ color:var(--bright); font-size:.9375rem; }
+.np-artist{ color:var(--vio); font-size:.8125rem; margin-top:.125rem; }
+.np-time{ font-size:.78rem; color:var(--vio-soft); margin-top:.375rem; }
+
 .np-bottom{ flex-shrink:0; }
-.np-controls{ display:flex; justify-content:center; gap:2.5rem; padding-top:.125rem; }
+.np-audio{ display:none; }
+
+.np-volume{ display:flex; align-items:center; gap:.5rem; }
+.np-vol{
+    -webkit-appearance:none; appearance:none;
+    flex:1;
+    min-width:0;
+    height:.875rem;
+    background:none;
+    cursor:pointer;
+}
+.np-vol:focus-visible{ outline:1px solid var(--bright); outline-offset:2px; }
+/* la parte ya recorrida se pinta con --np-fill, que actualiza el JS */
+.np-vol::-webkit-slider-runnable-track{
+    height:.3125rem;
+    border:1px solid var(--border-dim);
+    background:linear-gradient(to right,
+        var(--vio) var(--np-fill,35%), var(--panel-2) var(--np-fill,35%));
+}
+.np-vol::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:.4375rem; height:.8125rem;
+    margin-top:-.3125rem;
+    background:var(--bright);
+    border:1px solid var(--border);
+}
+.np-vol::-moz-range-track{
+    height:.3125rem;
+    border:1px solid var(--border-dim);
+    background:var(--panel-2);
+}
+.np-vol::-moz-range-progress{ height:.3125rem; background:var(--vio); }
+.np-vol::-moz-range-thumb{
+    width:.4375rem; height:.8125rem;
+    border-radius:0;
+    background:var(--bright);
+    border:1px solid var(--border);
+}
+
+.np-controls{ display:flex; justify-content:center; gap:2.5rem; padding-top:.375rem; }
+.np-mute,
 .np-controls button{
     background:none; border:0;
+    padding:0;
     color:var(--vio);
-    font-size:1rem;
-    cursor:pointer;
     font-family:var(--font);
+    font-size:1rem;
+    line-height:1;
+    cursor:pointer;
 }
+.np-mute{ font-size:.875rem; min-width:2.5ch; text-align:left; }
+.np-mute:hover,
 .np-controls button:hover{ color:var(--white); }
+.np-controls button[disabled]{ color:var(--vio-faint); cursor:default; }
+.np-controls button[disabled]:hover{ color:var(--vio-faint); }
 
 /* =======================================================
    BRAINWORM
@@ -708,6 +792,8 @@ img{ max-width:100%; display:block; }
 /* el JS envuelve cada <img class="dither"> en .dither-wrap. El tamaño del
    wrapper dentro de .mem-photo / .bug-photo se define junto a esas fotos. */
 .dither-wrap{ position:relative; cursor:pointer; }
+/* las que no abren el lightbox tampoco deben prometerlo con el cursor */
+.dither-wrap:has(img[data-nozoom]){ cursor:default; }
 .dither-wrap canvas{
     position:absolute; inset:0;
     width:100%; height:100%;
@@ -1032,15 +1118,18 @@ body:has(.page){ display:block; padding:0; }
     .row{ grid-template-columns:1fr; }
     .welcome,.music,.brain,.bug,.journal,.memory{ grid-column:auto; }
     .bug-photo,.mem-photo{ flex:none; aspect-ratio:4/3; }
-    .np-top{ flex-direction:column; }
-    .np-video{ width:100%; }
+    /* acá la ventana crece con el contenido: el alto ya no es definitivo,
+       así que el cover se ata al ancho de su columna y no al revés */
+    .np-top{ align-items:start; }
+    .np-cover{ height:auto; width:100%; }
     .gb-entries{ overflow:visible; }
     .hero{ min-height:9.375rem; }
     .logo-ascii{ font-size:clamp(4px,1.5vw,9px); }
 }
 
 @media (prefers-reduced-motion:reduce){
-    .gb-track.is-scrolling,.uc-title,.starfield .star{ animation:none; }
+    .gb-track.is-scrolling,.uc-title,.starfield .star,
+    .np-line.is-scrolling > span{ animation:none; }
     .welcome-screen,.dither-wrap canvas,.col-icon{ transition:none; }
 }
 
