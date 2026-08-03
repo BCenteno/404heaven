@@ -1115,12 +1115,13 @@ const PHOTOS = (function photosApi() {
     const link = widget.querySelector(".bug-link");
     if (!img) return;
 
-    PHOTOS.get("photos?select=*&section=eq.bug&order=created_at.desc")
+    PHOTOS.get("photos?select=*&section=eq.bug&order=taken_at.desc.nullslast")
       .then((rows) => {
-        // el marcado como bicho del mes manda; si no hay ninguno, el último
-        // que subiste. Es la misma regla con la que abre el carrete.
-        const row = rows.find((r) => r.is_featured) || rows[0];
-        if (!row || !row.image_path) {
+        // manda la FECHA del bicho, no cuándo lo subiste: si cargás uno de
+        // julio después que el de agosto, el widget sigue mostrando agosto.
+        // Es la misma regla con la que abre el carrete.
+        const row = rows.find((r) => r.image_path);
+        if (!row) {
           console.warn("[bug] no hay bichos con foto: el widget queda vacío");
           return;
         }
@@ -1145,17 +1146,15 @@ const PHOTOS = (function photosApi() {
   if (widget) fillWidget();
   if (!deck) return; // en la home no hay carrete que armar
 
-  PHOTOS.get("photos?select=*&section=eq.bug&order=taken_at.desc")
+  // por fecha del bicho, del más nuevo al más viejo. El orden de subida no
+  // pinta nada: un bicho de julio cargado hoy va detrás del de agosto. Los
+  // que no tengan fecha caen al final en vez de encabezar el carrete.
+  PHOTOS.get("photos?select=*&section=eq.bug&order=taken_at.desc.nullslast")
     .then((rows) => {
       if (!rows.length) {
         say("no bugs yet");
         return;
       }
-
-      // el destacado abre el carrete; si no hay ninguno queda el más
-      // reciente, que ya viene primero por el order=taken_at.desc
-      const star = rows.findIndex((r) => r.is_featured);
-      if (star > 0) rows.unshift(rows.splice(star, 1)[0]);
 
       const slides = document.createDocumentFragment();
       const thumbs = document.createDocumentFragment();
